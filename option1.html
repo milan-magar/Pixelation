@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Option 1 – Hidden Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; color: #1a202c; min-height: 100vh; padding: 24px; }
+        .app { max-width: 1200px; margin: 0 auto; background: #ffffff; border-radius: 32px; padding: 32px 36px; box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+        .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+        .nav a { text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 18px; border-radius: 40px; transition: all 0.2s; color: #4a5568; }
+        .nav a:hover { background: #edf2f7; color: #2d3748; }
+        .nav a.active { background: #ebf4ff; color: #3b82f6; }
+        .header-title { text-align: center; margin-bottom: 24px; }
+        .header-title h2 { font-weight: 700; font-size: 26px; letter-spacing: -0.5px; color: #1a202c; }
+        .header-title p { color: #4a5568; margin-top: 6px; font-size: 15px; }
+
+        /* --- Tabs --- */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 4px;
+            margin-bottom: 28px;
+            border: 1px solid #e2e8f0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 36px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #4a5568;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.5); }
+        .tab-btn.active { background: #ffffff; color: #1a202c; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- Controls --- */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #edf2f7;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+        }
+        .btn:hover:not(:disabled) { background: #e2e8f0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        .btn-primary { background: #3b82f6; border-color: transparent; color: #fff; }
+        .btn-primary:hover:not(:disabled) { background: #2563eb; }
+        .btn-secondary { background: #e2e8f0; border-color: #cbd5e0; }
+        .btn-secondary:hover:not(:disabled) { background: #cbd5e0; }
+        .btn-success { background: #22c55e; border-color: transparent; color: #fff; }
+        .btn-success:hover:not(:disabled) { background: #16a34a; }
+        .btn-warning { background: #f59e0b; border-color: transparent; color: #fff; }
+        .btn-warning:hover:not(:disabled) { background: #d97706; }
+        .btn-danger { background: #ef4444; border-color: transparent; color: #fff; }
+        .btn-danger:hover:not(:disabled) { background: #dc2626; }
+        .file-input { display: none; }
+
+        /* --- Grid & Canvas --- */
+        .canvas-wrap {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        .canvas-wrap img, .canvas-wrap canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            image-rendering: pixelated;
+            background: #ffffff;
+            margin: 0 auto;
+        }
+        .pixel-grid {
+            display: grid;
+            grid-template-columns: repeat(28, 1fr);
+            gap: 1px;
+            width: 100%;
+            aspect-ratio: 1/1;
+            max-width: 280px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e2e8f0;
+            border: 1px solid #cbd5e0;
+            cursor: pointer;
+        }
+        .pixel {
+            aspect-ratio: 1;
+            background: #e2e8f0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            position: relative;
+            z-index: 0;
+            will-change: transform;
+        }
+        /* FIX JIGGLING: use outline instead of border, and scale without border causing reflow */
+        .pixel:hover {
+            transform: scale(1.06);
+            z-index: 1;
+            outline: 2px solid #3b82f6;
+            outline-offset: -1px;
+            box-shadow: 0 0 8px rgba(59,130,246,0.4);
+            border-radius: 2px;
+        }
+        .grid-center { display: flex; justify-content: center; }
+
+        .preview-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 12px 0; }
+        .preview-col { flex: 1; min-width: 120px; }
+        .preview-col .label { font-size: 13px; color: #4a5568; margin-bottom: 4px; }
+        .size-badge {
+            background: #edf2f7;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: #4a5568;
+            display: inline-block;
+            margin-top: 6px;
+        }
+        .status {
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 12px 20px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #4a5568;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .status.success { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; }
+        .status.error { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+        .status.loading { color: #2563eb; border-color: #bfdbfe; background: #eff6ff; }
+        .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .scale-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .scale-control input[type="number"] {
+            width: 64px;
+            padding: 6px 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background: #ffffff;
+            color: #1a202c;
+            text-align: center;
+        }
+        .scale-control input[type="number"]:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+        .scale-control span { font-weight: 500; }
+
+        .reconstruct-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .reconstruct-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .reconstruct-options input[type="radio"] { accent-color: #3b82f6; width: 16px; height: 16px; }
+        .reconstruct-options .slider-group { display: flex; align-items: center; gap: 8px; }
+        .reconstruct-options input[type="range"] { width: 100px; accent-color: #3b82f6; }
+
+        .upload-section { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; margin: 8px 0 4px; }
+        .upload-section .info { color: #4a5568; font-size: 14px; }
+        .upload-section .file-name { color: #94a3b8; font-size: 13px; }
+        .badge-fixed { background: #e2e8f0; padding: 2px 12px; border-radius: 40px; font-size: 12px; color: #4a5568; font-weight: 500; }
+
+        .download-area { text-align: center; margin: 8px 0 4px; }
+        .scale-label { font-size: 14px; color: #4a5568; margin: 6px 0; }
+        .scale-label strong { color: #1a202c; }
+
+        /* --- Tooltip (unchanged) --- */
+        .tooltip {
+            position: fixed;
+            pointer-events: none;
+            background: rgba(15,23,42,0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #e8edf5;
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            display: none;
+            z-index: 999;
+            max-width: 360px;
+            min-width: 260px;
+        }
+        .tooltip .row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+        .tooltip .color-swatch { width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+        .tooltip .mini-canvas-wrap { border-radius: 8px; overflow: hidden; background: #0b0e14; border: 1px solid rgba(255,255,255,0.06); display: inline-block; margin-right: 4px; }
+        .tooltip .mini-canvas-wrap canvas { display: block; image-rendering: pixelated; }
+        .tooltip .formula { color: #fcd34d; font-weight: 500; }
+        .tooltip .highlight { color: #93bbfc; }
+        .tooltip .dim { color: #94a3b8; }
+        .tooltip .click-hint { margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+
+        @media (max-width: 768px) { .app { padding: 20px; } .grid-box { min-width: 150px; padding: 14px; } .tooltip { max-width: 280px; font-size: 12px; padding: 14px; } }
+        @media (max-width: 480px) { .app { padding: 12px; } .grid-box .pixel-grid { max-width: 180px; } }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <!-- Navigation -->
+    <div class="nav">
+        <a href="index.html">🏠 Home</a>
+        <a href="option1.html" class="active">🧪 Option 1 – Detail</a>
+        <a href="option2.html">🔐 Option 2 – Stegano</a>
+        <a href="option3.html">📦 Option 3 – Export</a>
+    </div>
+
+    <div class="header-title">
+        <h2>🧪 Option 1 – Base + Hidden Detail</h2>
+        <p>Stores average in high bits, variance in low bits. Reconstruct at any resolution.</p>
+    </div>
+
+    <!-- ===== TABS ===== -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="pixelate">🔍 Pixelate Image</button>
+        <button class="tab-btn" data-tab="reconstruct">🔄 Reconstruct Image</button>
+    </div>
+
+    <!-- ===== TAB 1: PIXELATE ===== -->
+    <div id="tab-pixelate" class="tab-content active">
+        <div class="controls">
+            <button class="btn btn-primary" id="uploadBtn">📁 Choose Image</button>
+            <button class="btn btn-secondary" id="pasteBtn">📋 Paste</button>
+            <button class="btn btn-success" id="generateBtn" disabled>▶ Generate Pixelated Grid</button>
+            <button class="btn btn-danger" id="resetBtn">↻ Reset</button>
+            <input type="file" id="fileInput" class="file-input" accept="image/*" />
+        </div>
+
+        <div id="gridPreview" style="display: none;">
+            <div class="preview-row">
+                <div class="preview-col">
+                    <div class="label">📷 Original (square‑cropped)</div>
+                    <div class="canvas-wrap"><img id="original" alt="Original" style="max-height:140px; width:auto;" /></div>
+                    <div class="size-badge" id="originalSize">—</div>
+                </div>
+                <div class="preview-col">
+                    <div class="label">🧩 28×28 Grid <span style="font-weight:400;font-size:11px;color:#94a3b8;">(with hidden variance)</span></div>
+                    <div class="canvas-wrap">
+                        <div class="grid-center"><div class="pixel-grid" id="grid"></div></div>
+                    </div>
+                    <div class="size-badge" id="gridSize">—</div>
+                    <div class="download-area">
+                        <div class="scale-label">Download scale: <strong>15×</strong> (420×420 PNG)</div>
+                        <button class="btn btn-secondary" id="downloadGridBtn" disabled>⬇ Download Grid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB 2: RECONSTRUCT ===== -->
+    <div id="tab-reconstruct" class="tab-content">
+        <div class="upload-section">
+            <span class="info">Upload a pixelated PNG:</span>
+            <button class="btn btn-secondary" id="uploadGridBtn">📂 Upload Grid</button>
+            <input type="file" id="gridFileInput" class="file-input" accept="image/png" />
+            <span class="badge-fixed">Divide: 15×</span>
+            <button class="btn btn-secondary" id="divideBtn" disabled>➗ Divide</button>
+            <span class="file-name" id="uploadedGridInfo"></span>
+        </div>
+
+        <div class="reconstruct-options">
+            <span>Mode:</span>
+            <label><input type="radio" name="reconMode" value="pixelated" checked /> Pixelated (blocky)</label>
+            <label><input type="radio" name="reconMode" value="smooth" /> Smooth (bicubic)</label>
+            <div class="slider-group">
+                <span>Sharpness:</span>
+                <input type="range" id="sharpnessSlider" min="0" max="100" value="65" />
+                <span id="sharpnessLabel">65</span>
+            </div>
+        </div>
+
+        <div class="scale-control">
+            <label for="reconScale">Reconstruction Scale:</label>
+            <input type="number" id="reconScale" value="10" min="2" max="50" step="1" />
+            <span>× (output: <span id="reconSizeLabel">280</span>×<span id="reconSizeLabel2">280</span> px)</span>
+            <button class="btn btn-warning" id="reconstructBtn" disabled>🔄 Reconstruct</button>
+            <button class="btn btn-success" id="downloadReconBtn" disabled>⬇ Download Reconstruction</button>
+        </div>
+
+        <div id="reconstructPreview" style="display: none;">
+            <div class="preview-row">
+                <div class="preview-col">
+                    <div class="label">🔄 Reconstructed <span style="font-weight:400;font-size:11px;color:#94a3b8;" id="reconLabel">(pixelated)</span></div>
+                    <div class="canvas-wrap">
+                        <canvas id="reconstructCanvas" style="width:100%;aspect-ratio:1/1;max-width:560px;margin:0 auto;display:block;border-radius:10px;image-rendering:auto;"></canvas>
+                    </div>
+                    <div class="size-badge" id="reconstructSize">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status" id="status">📁 Choose an image or paste from clipboard</div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip">
+        <div class="row">
+            <span class="mini-canvas-wrap"><canvas id="miniCanvas" width="40" height="40"></canvas></span>
+            <span><strong>Block <span id="blockCoords">(0,0)</span></strong><div style="font-size:11px;color:#94a3b8;">original block pixels</div></span>
+        </div>
+        <div class="row">
+            <span class="color-swatch" id="swatch"></span>
+            <span><span class="highlight">Obtained color</span> → <span id="avgColor">rgba(0,0,0,255)</span></span>
+        </div>
+        <div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;">
+            <div><span class="dim">Sum(R,G,B,A) =</span> <span id="sumValues">(0,0,0,0)</span></div>
+            <div><span class="dim">Pixel count (n) =</span> <span id="pixelCount">0</span></div>
+            <div><span class="dim">Hidden variance (std dev) =</span> <span id="variance">0</span></div>
+            <div class="formula">⬤ Average = (sumR/n, sumG/n, sumB/n, sumA/n) &amp; variance in LSBs</div>
+            <div class="click-hint">🖱️ Click cell → see full pixel list</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// DOM REFS
+// ============================================================
+const fileInput = document.getElementById('fileInput');
+const gridFileInput = document.getElementById('gridFileInput');
+const uploadBtn = document.getElementById('uploadBtn');
+const pasteBtn = document.getElementById('pasteBtn');
+const generateBtn = document.getElementById('generateBtn');
+const reconstructBtn = document.getElementById('reconstructBtn');
+const resetBtn = document.getElementById('resetBtn');
+const downloadGridBtn = document.getElementById('downloadGridBtn');
+const downloadReconBtn = document.getElementById('downloadReconBtn');
+const uploadGridBtn = document.getElementById('uploadGridBtn');
+const divideBtn = document.getElementById('divideBtn');
+const originalImg = document.getElementById('original');
+const gridContainer = document.getElementById('grid');
+const gridPreview = document.getElementById('gridPreview');
+const reconstructPreview = document.getElementById('reconstructPreview');
+const status = document.getElementById('status');
+const originalSizeEl = document.getElementById('originalSize');
+const gridSizeEl = document.getElementById('gridSize');
+const reconstructSizeEl = document.getElementById('reconstructSize');
+const reconstructCanvas = document.getElementById('reconstructCanvas');
+const uploadedGridInfo = document.getElementById('uploadedGridInfo');
+const reconLabel = document.getElementById('reconLabel');
+const sharpnessSlider = document.getElementById('sharpnessSlider');
+const sharpnessLabel = document.getElementById('sharpnessLabel');
+const reconScaleInput = document.getElementById('reconScale');
+const reconSizeLabel = document.getElementById('reconSizeLabel');
+const reconSizeLabel2 = document.getElementById('reconSizeLabel2');
+
+// Fixed scale for grid download
+const GRID_SCALE = 15;
+
+// Tooltip refs
+const tooltip = document.getElementById('tooltip');
+const miniCanvas = document.getElementById('miniCanvas');
+const blockCoords = document.getElementById('blockCoords');
+const swatch = document.getElementById('swatch');
+const avgColor = document.getElementById('avgColor');
+const sumValues = document.getElementById('sumValues');
+const pixelCount = document.getElementById('pixelCount');
+const varianceSpan = document.getElementById('variance');
+
+// ============================================================
+// TABS
+// ============================================================
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = {
+    pixelate: document.getElementById('tab-pixelate'),
+    reconstruct: document.getElementById('tab-reconstruct'),
+};
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        Object.keys(tabContents).forEach(key => {
+            tabContents[key].classList.toggle('active', key === tab);
+        });
+        // Hide tooltip when switching tabs
+        tooltip.style.display = 'none';
+    });
+});
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+    squareImageData: null,
+    pixelData: null,
+    blockPixels: null,
+    origImageData: null,
+    squareSize: 0,
+    blockW: 0,
+    blockH: 0,
+    originalFileSize: 0,
+    isFromUploadedGrid: false,
+    uploadedImage: null,
+};
+
+// ============================================================
+// HELPERS
+// ============================================================
+function setStatus(msg, type = '') {
+    status.innerHTML = msg;
+    status.className = 'status' + (type ? ' ' + type : '');
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function cropToSquare(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            const w = img.width, h = img.height;
+            const size = Math.min(w, h);
+            const x = (w - size) / 2;
+            const y = (h - size) / 2;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
+            resolve(canvas.toDataURL('image/png'));
+        };
+        img.src = src;
+    });
+}
+
+function generateGridData(squareDataURL) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            try {
+                const size = img.width;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, size, size);
+                const data = imageData.data;
+                const blockW = size / 28;
+                const blockH = size / 28;
+                const pixelData = [];
+                const blockPixels = [];
+                for (let row = 0; row < 28; row++) {
+                    for (let col = 0; col < 28; col++) {
+                        const xStart = Math.floor(col * blockW);
+                        const xEnd = Math.floor((col + 1) * blockW);
+                        const yStart = Math.floor(row * blockH);
+                        const yEnd = Math.floor((row + 1) * blockH);
+                        let sumR = 0, sumG = 0, sumB = 0, sumA = 0, count = 0;
+                        const pixels = [];
+                        for (let y = yStart; y < yEnd; y++) {
+                            for (let x = xStart; x < xEnd; x++) {
+                                const idx = (y * size + x) * 4;
+                                const r = data[idx], g = data[idx+1], b = data[idx+2], a = data[idx+3];
+                                sumR += r; sumG += g; sumB += b; sumA += a;
+                                count++;
+                                pixels.push({ r, g, b, a });
+                            }
+                        }
+                        const avgR = Math.round(sumR / count);
+                        const avgG = Math.round(sumG / count);
+                        const avgB = Math.round(sumB / count);
+                        const avgA = Math.round(sumA / count);
+                        let varR = 0, varG = 0, varB = 0;
+                        for (const p of pixels) {
+                            varR += (p.r - avgR) ** 2;
+                            varG += (p.g - avgG) ** 2;
+                            varB += (p.b - avgB) ** 2;
+                        }
+                        const std = Math.sqrt((varR + varG + varB) / (3 * count));
+                        pixelData.push({ r: avgR, g: avgG, b: avgB, a: avgA, sumR, sumG, sumB, sumA, count, variance: std });
+                        blockPixels.push(pixels);
+                    }
+                }
+                resolve({ pixelData, blockPixels, blockW, blockH, size, imageData });
+            } catch(e) { reject(e); }
+        };
+        img.onerror = () => reject(new Error('Failed to load square image.'));
+        img.src = squareDataURL;
+    });
+}
+
+function embedVariance(pixelData) {
+    const maxStd = 128;
+    pixelData.forEach(p => {
+        const std = Math.min(p.variance, maxStd);
+        const code = Math.round((std / maxStd) * 63);
+        const rBits = (code >> 4) & 0x3;
+        const gBits = (code >> 2) & 0x3;
+        const bBits = code & 0x3;
+        p.r = (p.r & 0xFC) | rBits;
+        p.g = (p.g & 0xFC) | gBits;
+        p.b = (p.b & 0xFC) | bBits;
+    });
+    return pixelData;
+}
+
+function extractVariance(pixelData) {
+    return pixelData.map(p => {
+        const rBits = p.r & 0x3;
+        const gBits = p.g & 0x3;
+        const bBits = p.b & 0x3;
+        const code = (rBits << 4) | (gBits << 2) | bBits;
+        const std = (code / 63) * 128;
+        return { ...p, variance: std };
+    });
+}
+
+function renderGrid(container, pixelData) {
+    container.innerHTML = '';
+    pixelData.forEach((p, idx) => {
+        const div = document.createElement('div');
+        div.className = 'pixel';
+        div.style.backgroundColor = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+        div.dataset.index = idx;
+        div.addEventListener('mouseover', onHover);
+        div.addEventListener('mousemove', onMove);
+        div.addEventListener('mouseout', onLeave);
+        div.addEventListener('click', onClick);
+        container.appendChild(div);
+    });
+}
+
+function onHover(e) {
+    const div = e.currentTarget;
+    const idx = parseInt(div.dataset.index);
+    const row = Math.floor(idx / 28);
+    const col = idx % 28;
+    const p = state.pixelData[idx];
+    if (!p) return;
+    blockCoords.textContent = `(${row}, ${col})`;
+    swatch.style.backgroundColor = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+    avgColor.textContent = `rgba(${p.r}, ${p.g}, ${p.b}, ${p.a})`;
+    sumValues.textContent = `(${p.sumR}, ${p.sumG}, ${p.sumB}, ${p.sumA})`;
+    pixelCount.textContent = p.count;
+    const rBits = p.r & 0x3;
+    const gBits = p.g & 0x3;
+    const bBits = p.b & 0x3;
+    const code = (rBits << 4) | (gBits << 2) | bBits;
+    const std = (code / 63) * 128;
+    varianceSpan.textContent = std.toFixed(2);
+    if (state.origImageData && state.squareSize > 0) {
+        const miniCtx = miniCanvas.getContext('2d');
+        const xStart = Math.floor(col * state.blockW);
+        const xEnd = Math.floor((col + 1) * state.blockW);
+        const yStart = Math.floor(row * state.blockH);
+        const yEnd = Math.floor((row + 1) * state.blockH);
+        const blockW = xEnd - xStart;
+        const blockH = yEnd - yStart;
+        const fullCanvas = document.createElement('canvas');
+        fullCanvas.width = state.squareSize;
+        fullCanvas.height = state.squareSize;
+        const fullCtx = fullCanvas.getContext('2d');
+        fullCtx.putImageData(state.origImageData, 0, 0);
+        miniCtx.clearRect(0, 0, 40, 40);
+        miniCtx.imageSmoothingEnabled = false;
+        miniCtx.drawImage(fullCanvas, xStart, yStart, blockW, blockH, 0, 0, 40, 40);
+    }
+    tooltip.style.display = 'block';
+}
+
+function onMove(e) {
+    const x = e.clientX + 16;
+    const y = e.clientY + 16;
+    const tw = tooltip.offsetWidth || 300;
+    const th = tooltip.offsetHeight || 220;
+    const maxX = window.innerWidth - tw - 12;
+    const maxY = window.innerHeight - th - 12;
+    tooltip.style.left = Math.min(x, maxX) + 'px';
+    tooltip.style.top = Math.min(y, maxY) + 'px';
+}
+
+function onLeave() { tooltip.style.display = 'none'; }
+
+function onClick(e) {
+    const idx = parseInt(e.currentTarget.dataset.index);
+    const pixels = state.blockPixels[idx];
+    if (!pixels) return;
+    const row = Math.floor(idx / 28);
+    const col = idx % 28;
+    const win = window.open('', '_blank', 'width=600,height=600');
+    if (!win) { alert('Allow popups.'); return; }
+    const doc = win.document;
+    doc.write(`<html><head><title>Block (${row},${col})</title>
+        <style>body{font-family:Inter,monospace;padding:24px;background:#f0f4f8;color:#1a202c;}
+        table{border-collapse:collapse;width:100%;margin-top:16px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+        th,td{padding:8px 12px;border:1px solid #e2e8f0;text-align:center;}
+        th{background:#f1f5f9;color:#1a202c;font-weight:600;}
+        .color-box{display:inline-block;width:20px;height:20px;border-radius:6px;border:1px solid #cbd5e0;}
+        .info{color:#4a5568;margin-bottom:12px;}
+        </style></head><body>
+        <h2>Block (${row}, ${col}) – ${pixels.length} pixels</h2>
+        <p class="info">Total pixels: ${pixels.length}</p>
+        <table><thead><tr><th>#</th><th>R</th><th>G</th><th>B</th><th>A</th><th>Color</th></tr></thead><tbody>`);
+    pixels.forEach((p, i) => {
+        const bg = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+        doc.write(`<tr><td>${i+1}</td><td>${p.r}</td><td>${p.g}</td><td>${p.b}</td><td>${p.a}</td><td><span class="color-box" style="background:${bg};"></span></td></tr>`);
+    });
+    doc.write(`</tbody></table></body></html>`);
+    doc.close();
+}
+
+// ============================================================
+// BICUBIC INTERPOLATION
+// ============================================================
+function bicubicKernel(x) {
+    const a = -0.5;
+    const absX = Math.abs(x);
+    if (absX <= 1) return (a + 2) * absX * absX * absX - (a + 3) * absX * absX + 1;
+    if (absX <= 2) return a * absX * absX * absX - 5 * a * absX * absX + 8 * a * absX - 4 * a;
+    return 0;
+}
+
+function bicubicInterpolateChannel(grid, x, y, width, height) {
+    const xInt = Math.floor(x);
+    const yInt = Math.floor(y);
+    const fx = x - xInt;
+    const fy = y - yInt;
+
+    let result = 0;
+    for (let dy = -1; dy <= 2; dy++) {
+        for (let dx = -1; dx <= 2; dx++) {
+            const px = Math.min(Math.max(xInt + dx, 0), width - 1);
+            const py = Math.min(Math.max(yInt + dy, 0), height - 1);
+            const w = bicubicKernel(fx - dx) * bicubicKernel(fy - dy);
+            result += grid[py * width + px] * w;
+        }
+    }
+    return Math.max(0, Math.min(255, Math.round(result)));
+}
+
+function performSmoothReconstruction(pixelData, scale, sharpness) {
+    const gridSize = 28;
+    const outSize = gridSize * scale;
+
+    const rGrid = pixelData.map(p => p.r);
+    const gGrid = pixelData.map(p => p.g);
+    const bGrid = pixelData.map(p => p.b);
+    const aGrid = pixelData.map(p => p.a);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = outSize;
+    canvas.height = outSize;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.createImageData(outSize, outSize);
+    const data = imageData.data;
+
+    const blendFactor = sharpness / 100;
+
+    for (let outY = 0; outY < outSize; outY++) {
+        for (let outX = 0; outX < outSize; outX++) {
+            const gridX = outX / scale;
+            const gridY = outY / scale;
+
+            const rBicubic = bicubicInterpolateChannel(rGrid, gridX, gridY, gridSize, gridSize);
+            const gBicubic = bicubicInterpolateChannel(gGrid, gridX, gridY, gridSize, gridSize);
+            const bBicubic = bicubicInterpolateChannel(bGrid, gridX, gridY, gridSize, gridSize);
+            const aBicubic = bicubicInterpolateChannel(aGrid, gridX, gridY, gridSize, gridSize);
+
+            const nnX = Math.min(Math.floor(gridX), gridSize - 1);
+            const nnY = Math.min(Math.floor(gridY), gridSize - 1);
+            const nnIdx = nnY * gridSize + nnX;
+            const rNN = pixelData[nnIdx].r;
+            const gNN = pixelData[nnIdx].g;
+            const bNN = pixelData[nnIdx].b;
+            const aNN = pixelData[nnIdx].a;
+
+            const r = Math.round(rNN + (rBicubic - rNN) * (1 - blendFactor * 0.7));
+            const g = Math.round(gNN + (gBicubic - gNN) * (1 - blendFactor * 0.7));
+            const b = Math.round(bNN + (bBicubic - bNN) * (1 - blendFactor * 0.7));
+            const a = Math.round(aNN + (aBicubic - aNN) * (1 - blendFactor * 0.7));
+
+            const idx = (outY * outSize + outX) * 4;
+            data[idx] = Math.max(0, Math.min(255, r));
+            data[idx + 1] = Math.max(0, Math.min(255, g));
+            data[idx + 2] = Math.max(0, Math.min(255, b));
+            data[idx + 3] = Math.max(0, Math.min(255, a));
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    return canvas;
+}
+
+// ============================================================
+// RECONSTRUCTION ENGINE
+// ============================================================
+function performReconstruction(mode) {
+    if (!state.pixelData || !state.blockPixels) {
+        setStatus('❌ No grid data. Generate or upload a pixelated grid first.', 'error');
+        return;
+    }
+
+    const scale = parseInt(reconScaleInput.value) || 10;
+    if (scale < 2 || scale > 50) {
+        setStatus('❌ Scale must be between 2 and 50.', 'error');
+        return;
+    }
+    reconSizeLabel.textContent = 28 * scale;
+    reconSizeLabel2.textContent = 28 * scale;
+
+    const sharpness = parseInt(sharpnessSlider.value) || 65;
+
+    reconstructCanvas.width = 28 * scale;
+    reconstructCanvas.height = 28 * scale;
+    reconstructCanvas.style.maxWidth = Math.min(28 * scale, 800) + 'px';
+
+    const ctx = reconstructCanvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    const refinedPixelData = state.blockPixels.map(block => {
+        let sumR = 0, sumG = 0, sumB = 0;
+        block.forEach(p => { sumR += p.r; sumG += p.g; sumB += p.b; });
+        return {
+            r: Math.round(sumR / block.length),
+            g: Math.round(sumG / block.length),
+            b: Math.round(sumB / block.length),
+            a: 255
+        };
+    });
+
+    if (mode === 'pixelated') {
+        for (let row = 0; row < 28; row++) {
+            for (let col = 0; col < 28; col++) {
+                const idx = row * 28 + col;
+                const p = refinedPixelData[idx];
+                ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+                ctx.fillRect(col * scale, row * scale, scale, scale);
+            }
+        }
+        reconLabel.textContent = '(pixelated)';
+    } else {
+        const resultCanvas = performSmoothReconstruction(refinedPixelData, scale, sharpness);
+        ctx.drawImage(resultCanvas, 0, 0, 28 * scale, 28 * scale);
+        reconLabel.textContent = `(smooth, sharpness ${sharpness})`;
+    }
+
+    const pngData = reconstructCanvas.toDataURL('image/png');
+    fetch(pngData).then(r => r.blob()).then(blob => {
+        reconstructSizeEl.textContent = '📏 ' + formatSize(blob.size);
+    });
+    reconstructPreview.style.display = 'flex';
+    downloadReconBtn.disabled = false;
+    setStatus(`✅ Reconstruction (${mode}) complete at ${28*scale}×${28*scale}!`, 'success');
+}
+
+// ============================================================
+// STEP 1: GENERATE GRID
+// ============================================================
+async function loadImage(src, fileSize = 0) {
+    state.originalFileSize = fileSize;
+    state.isFromUploadedGrid = false;
+    setStatus('⏳ Cropping...', 'loading');
+    const squareSrc = await cropToSquare(src);
+    state.squareImageData = squareSrc;
+    originalImg.src = squareSrc;
+    gridPreview.style.display = 'flex';
+    generateBtn.disabled = false;
+    originalSizeEl.textContent = '📏 ' + formatSize(fileSize);
+    gridSizeEl.textContent = '—';
+    downloadGridBtn.disabled = true;
+    setStatus('✅ Image cropped. Click "Generate Pixelated Grid".', 'success');
+}
+
+async function generateGrid() {
+    if (!state.squareImageData) {
+        setStatus('❌ No image loaded.', 'error');
+        return;
+    }
+    setStatus('⏳ Generating grid...', 'loading');
+    try {
+        const result = await generateGridData(state.squareImageData);
+        state.pixelData = result.pixelData;
+        state.blockPixels = result.blockPixels;
+        state.blockW = result.blockW;
+        state.blockH = result.blockH;
+        state.squareSize = result.size;
+        state.origImageData = result.imageData;
+        state.pixelData = embedVariance(state.pixelData);
+        renderGrid(gridContainer, state.pixelData);
+        downloadGridBtn.disabled = false;
+        reconstructBtn.disabled = false;
+
+        const rawCanvas = document.createElement('canvas');
+        rawCanvas.width = 28;
+        rawCanvas.height = 28;
+        const rawCtx = rawCanvas.getContext('2d');
+        const imgData = rawCtx.createImageData(28, 28);
+        const d = imgData.data;
+        state.pixelData.forEach((p, i) => {
+            const j = i * 4;
+            d[j] = p.r; d[j+1] = p.g; d[j+2] = p.b; d[j+3] = p.a;
+        });
+        rawCtx.putImageData(imgData, 0, 0);
+        const rawPNG = rawCanvas.toDataURL('image/png');
+        const rawBlob = await fetch(rawPNG).then(r => r.blob());
+        gridSizeEl.textContent = '📏 ' + formatSize(rawBlob.size);
+
+        setStatus('✅ Grid generated. Go to Reconstruct tab to enhance it.', 'success');
+    } catch(err) {
+        setStatus('❌ Error: ' + err.message, 'error');
+    }
+}
+
+function downloadGridPNG() {
+    if (!state.pixelData) return;
+    const size = 28 * GRID_SCALE;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    state.pixelData.forEach((p, idx) => {
+        const row = Math.floor(idx / 28);
+        const col = idx % 28;
+        ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+        ctx.fillRect(col * GRID_SCALE, row * GRID_SCALE, GRID_SCALE, GRID_SCALE);
+    });
+    const link = document.createElement('a');
+    link.download = `pixelated_${size}x${size}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    setStatus(`✅ Downloaded ${size}×${size} PNG.`, 'success');
+}
+
+// ============================================================
+// STEP 2: UPLOAD / DIVIDE / RECONSTRUCT
+// ============================================================
+function uploadPixelatedGrid(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const dataURL = e.target.result;
+        state.uploadedGridDataURL = dataURL;
+        state.isFromUploadedGrid = true;
+        const img = new Image();
+        img.onload = function() {
+            state.uploadedImage = img;
+            originalImg.src = dataURL;
+            gridContainer.innerHTML = '';
+            divideBtn.disabled = false;
+            uploadedGridInfo.textContent = `📤 ${file.name} (${img.width}×${img.height})`;
+            gridPreview.style.display = 'flex';
+            originalSizeEl.textContent = '📏 ' + formatSize(file.size);
+            gridSizeEl.textContent = `⚠️ Click "Divide" (15×) to get 28×28 grid`;
+            reconstructBtn.disabled = true;
+            downloadGridBtn.disabled = true;
+            generateBtn.disabled = true;
+            setStatus(`✅ Uploaded. Click "Divide" (15×) to downscale to 28×28.`, 'success');
+        };
+        img.src = dataURL;
+    };
+    reader.readAsDataURL(file);
+}
+
+function divideImage() {
+    if (!state.uploadedImage) {
+        setStatus('❌ No image uploaded.', 'error');
+        return;
+    }
+    const factor = 15;
+    const img = state.uploadedImage;
+    const w = img.width, h = img.height;
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const data = imageData.data;
+
+    const pixelData = [];
+    const blockPixels = [];
+
+    const blockW = w / 28;
+    const blockH = h / 28;
+
+    for (let row = 0; row < 28; row++) {
+        for (let col = 0; col < 28; col++) {
+            const xStart = Math.floor(col * blockW);
+            const xEnd = Math.floor((col + 1) * blockW);
+            const yStart = Math.floor(row * blockH);
+            const yEnd = Math.floor((row + 1) * blockH);
+            let sumR = 0, sumG = 0, sumB = 0, sumA = 0, count = 0;
+            const pixels = [];
+            for (let y = yStart; y < yEnd; y++) {
+                for (let x = xStart; x < xEnd; x++) {
+                    const idx = (y * w + x) * 4;
+                    const r = data[idx], g = data[idx+1], b = data[idx+2], a = data[idx+3];
+                    sumR += r; sumG += g; sumB += b; sumA += a;
+                    count++;
+                    pixels.push({ r, g, b, a });
+                }
+            }
+            const avgR = Math.round(sumR / count);
+            const avgG = Math.round(sumG / count);
+            const avgB = Math.round(sumB / count);
+            const avgA = Math.round(sumA / count);
+            let varR = 0, varG = 0, varB = 0;
+            for (const p of pixels) {
+                varR += (p.r - avgR) ** 2;
+                varG += (p.g - avgG) ** 2;
+                varB += (p.b - avgB) ** 2;
+            }
+            const std = Math.sqrt((varR + varG + varB) / (3 * count));
+            pixelData.push({ r: avgR, g: avgG, b: avgB, a: avgA, sumR, sumG, sumB, sumA, count, variance: std });
+            blockPixels.push(pixels);
+        }
+    }
+
+    state.pixelData = pixelData;
+    state.blockPixels = blockPixels;
+    state.origImageData = null;
+    state.squareSize = 28;
+    state.isFromUploadedGrid = true;
+
+    renderGrid(gridContainer, state.pixelData);
+    const rawCanvas = document.createElement('canvas');
+    rawCanvas.width = 28;
+    rawCanvas.height = 28;
+    const rawCtx = rawCanvas.getContext('2d');
+    const imgData = rawCtx.createImageData(28, 28);
+    const d = imgData.data;
+    state.pixelData.forEach((p, i) => {
+        const j = i * 4;
+        d[j] = p.r; d[j+1] = p.g; d[j+2] = p.b; d[j+3] = p.a;
+    });
+    rawCtx.putImageData(imgData, 0, 0);
+    const rawPNG = rawCanvas.toDataURL('image/png');
+    fetch(rawPNG).then(r => r.blob()).then(blob => {
+        gridSizeEl.textContent = '📏 ' + formatSize(blob.size);
+    });
+    reconstructBtn.disabled = false;
+    downloadGridBtn.disabled = false;
+    divideBtn.disabled = true;
+    setStatus(`✅ Divided to 28×28 (${factor}×). Click "Reconstruct".`, 'success');
+}
+
+function downloadReconstruction() {
+    if (!reconstructCanvas) return;
+    const link = document.createElement('a');
+    const w = reconstructCanvas.width;
+    const h = reconstructCanvas.height;
+    link.download = `reconstruction_${w}x${h}.png`;
+    link.href = reconstructCanvas.toDataURL('image/png');
+    link.click();
+    setStatus(`✅ Downloaded ${w}×${h} PNG.`, 'success');
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function reset() {
+    state = { squareImageData: null, pixelData: null, blockPixels: null, origImageData: null, squareSize: 0, blockW: 0, blockH: 0, originalFileSize: 0, isFromUploadedGrid: false, uploadedGridDataURL: null, uploadedImage: null };
+    originalImg.src = '';
+    gridContainer.innerHTML = '';
+    gridPreview.style.display = 'none';
+    reconstructPreview.style.display = 'none';
+    generateBtn.disabled = true;
+    reconstructBtn.disabled = true;
+    downloadGridBtn.disabled = true;
+    downloadReconBtn.disabled = true;
+    divideBtn.disabled = true;
+    originalSizeEl.textContent = '—';
+    gridSizeEl.textContent = '—';
+    reconstructSizeEl.textContent = '—';
+    uploadedGridInfo.textContent = '';
+    const ctx = reconstructCanvas.getContext('2d');
+    ctx.clearRect(0, 0, reconstructCanvas.width, reconstructCanvas.height);
+    tooltip.style.display = 'none';
+    setStatus('🔄 Reset. Load an image.', '');
+    fileInput.value = '';
+    gridFileInput.value = '';
+}
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+uploadBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => { await loadImage(ev.target.result, file.size); };
+    reader.readAsDataURL(file);
+    fileInput.value = '';
+});
+
+pasteBtn.addEventListener('click', async () => {
+    try {
+        const items = await navigator.clipboard.read();
+        for (const item of items) {
+            if (item.types.some(t => t.startsWith('image/'))) {
+                const blob = await item.getType(item.types.find(t => t.startsWith('image/')));
+                const reader = new FileReader();
+                reader.onload = async (ev) => { await loadImage(ev.target.result, blob.size); };
+                reader.readAsDataURL(blob);
+                return;
+            }
+        }
+        setStatus('❌ No image in clipboard.', 'error');
+    } catch(err) {
+        setStatus('❌ Clipboard error: ' + err.message, 'error');
+    }
+});
+
+generateBtn.addEventListener('click', generateGrid);
+downloadGridBtn.addEventListener('click', downloadGridPNG);
+
+uploadGridBtn.addEventListener('click', () => gridFileInput.click());
+gridFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) uploadPixelatedGrid(file);
+    gridFileInput.value = '';
+});
+divideBtn.addEventListener('click', divideImage);
+
+reconstructBtn.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="reconMode"]:checked');
+    const mode = selected ? selected.value : 'pixelated';
+    performReconstruction(mode);
+});
+
+document.querySelectorAll('input[name="reconMode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        if (state.pixelData && state.blockPixels) {
+            const selected = document.querySelector('input[name="reconMode"]:checked');
+            const mode = selected ? selected.value : 'pixelated';
+            performReconstruction(mode);
+        }
+    });
+});
+
+sharpnessSlider.addEventListener('input', () => {
+    sharpnessLabel.textContent = sharpnessSlider.value;
+    if (state.pixelData && state.blockPixels) {
+        const selected = document.querySelector('input[name="reconMode"]:checked');
+        const mode = selected ? selected.value : 'pixelated';
+        if (mode === 'smooth') {
+            performReconstruction('smooth');
+        }
+    }
+});
+
+reconScaleInput.addEventListener('input', () => {
+    const scale = parseInt(reconScaleInput.value) || 10;
+    reconSizeLabel.textContent = 28 * scale;
+    reconSizeLabel2.textContent = 28 * scale;
+});
+
+downloadReconBtn.addEventListener('click', downloadReconstruction);
+
+resetBtn.addEventListener('click', reset);
+
+// ============================================================
+// INIT
+// ============================================================
+setStatus('📁 Choose an image or paste from clipboard');
+</script>
+</body>
+</html>
