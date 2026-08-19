@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Option 4 – Full‑Res Stegano + Scramble + Encrypt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 32px 36px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        }
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+        .nav a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 40px;
+            transition: all 0.2s;
+            color: #4a5568;
+        }
+        .nav a:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        .nav a.active {
+            background: #ebf4ff;
+            color: #3b82f6;
+        }
+
+        .header-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header-title h2 {
+            font-weight: 700;
+            font-size: 26px;
+            letter-spacing: -0.5px;
+            color: #1a202c;
+        }
+        .header-title p {
+            color: #4a5568;
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 4px;
+            margin-bottom: 28px;
+            border: 1px solid #e2e8f0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 36px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #4a5568;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .tab-btn.active {
+            background: #ffffff;
+            color: #1a202c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #edf2f7;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+        }
+        .btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-primary {
+            background: #3b82f6;
+            border-color: transparent;
+            color: #fff;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            border-color: #cbd5e0;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #cbd5e0;
+        }
+        .btn-success {
+            background: #22c55e;
+            border-color: transparent;
+            color: #fff;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #16a34a;
+        }
+        .btn-warning {
+            background: #f59e0b;
+            border-color: transparent;
+            color: #fff;
+        }
+        .btn-warning:hover:not(:disabled) {
+            background: #d97706;
+        }
+        .btn-danger {
+            background: #ef4444;
+            border-color: transparent;
+            color: #fff;
+        }
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+        .btn-purple {
+            background: #8b5cf6;
+            border-color: transparent;
+            color: #fff;
+        }
+        .btn-purple:hover:not(:disabled) {
+            background: #7c3aed;
+        }
+        .file-input {
+            display: none;
+        }
+
+        .canvas-wrap {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        .canvas-wrap img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            background: #ffffff;
+            margin: 0 auto;
+            max-height: 200px;
+        }
+
+        .preview-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .preview-col {
+            flex: 1;
+            min-width: 120px;
+        }
+        .preview-col .label {
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+        .size-badge {
+            background: #edf2f7;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: #4a5568;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .extract-text-area {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .extract-text-area .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .extract-text-area .label .badge {
+            font-size: 12px;
+            font-weight: 500;
+            background: #ebf4ff;
+            color: #3b82f6;
+            padding: 2px 12px;
+            border-radius: 40px;
+        }
+        .extract-text-area .content {
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            color: #1a202c;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 52px;
+            word-break: break-word;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .extract-text-area .content .placeholder {
+            color: #94a3b8;
+        }
+
+        .msg-area {
+            margin-top: 12px;
+        }
+        .msg-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 12px;
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            background: #fff;
+            color: #1a202c;
+            resize: vertical;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+        .msg-textarea:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+        .msg-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            gap: 8px;
+        }
+        .msg-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .char-count {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .char-count.exceeded {
+            color: #ef4444;
+        }
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .status {
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 12px 20px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #4a5568;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .status.success {
+            color: #16a34a;
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+        .status.error {
+            color: #dc2626;
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+        .status.loading {
+            color: #2563eb;
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e2e8f0;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin: 8px 0 12px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .mode-selector label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .mode-selector input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+        }
+        .mode-selector .mode-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-right: 8px;
+        }
+
+        .password-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            align-items: center;
+            padding: 8px 12px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-top: 6px;
+        }
+        .password-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        .password-group input[type="password"] {
+            padding: 4px 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            background: #fff;
+            color: #1a202c;
+            width: 130px;
+        }
+        .password-group input[type="password"]:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+
+        .download-area-extract {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            margin: 12px 0 6px;
+            padding: 16px 20px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            border: 1px solid #bbf7d0;
+            display: none;
+        }
+        .download-area-extract .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-right: 4px;
+        }
+        .download-area-extract .filename-input {
+            padding: 4px 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            background: #fff;
+            color: #1a202c;
+            width: 140px;
+        }
+        .download-area-extract .filename-input:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+
+        /* ===== EXTRACT TAB – ENHANCED LAYOUT ===== */
+        .extract-section {
+            margin-top: 16px;
+        }
+        .extract-section .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .extract-section .section-title .line {
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .extract-images-row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            margin: 8px 0 12px;
+        }
+        .extract-images-row .img-col {
+            flex: 1;
+            min-width: 0;
+        }
+        .extract-images-row .img-col .label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .extract-images-row .img-col .label .badge {
+            font-size: 11px;
+            font-weight: 400;
+            background: #edf2f7;
+            padding: 0 10px;
+            border-radius: 40px;
+            color: #4a5568;
+        }
+        .extract-images-row .canvas-wrap {
+            background: #fafbfc;
+            border-radius: 16px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .extract-images-row .canvas-wrap img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #ffffff;
+            margin: 0 auto;
+            max-height: 220px;
+            object-fit: contain;
+        }
+        .extract-images-row .size-badge {
+            margin-top: 6px;
+            font-size: 12px;
+            background: #edf2f7;
+            padding: 2px 14px;
+            border-radius: 40px;
+            color: #4a5568;
+            display: inline-block;
+        }
+
+        .extract-text-wrapper {
+            margin-top: 16px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .extract-text-wrapper .text-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .extract-text-wrapper .text-header .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .extract-text-wrapper .text-header .label .badge {
+            font-size: 12px;
+            font-weight: 500;
+            background: #ebf4ff;
+            color: #3b82f6;
+            padding: 2px 12px;
+            border-radius: 40px;
+        }
+        .extract-text-wrapper .text-body {
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            color: #1a202c;
+            background: #ffffff;
+            padding: 14px 18px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 56px;
+            word-break: break-word;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .extract-text-wrapper .text-body .placeholder {
+            color: #94a3b8;
+        }
+
+        .extract-download-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            align-items: center;
+            margin-top: 16px;
+            padding: 14px 20px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            border: 1px solid #bbf7d0;
+            display: none;
+        }
+        .extract-download-wrapper .dl-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-right: 4px;
+        }
+        .extract-download-wrapper .filename-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        .extract-download-wrapper .filename-group input {
+            padding: 4px 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            background: #fff;
+            color: #1a202c;
+            width: 130px;
+        }
+        .extract-download-wrapper .filename-group input:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+        .extract-download-wrapper .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .extract-download-wrapper .btn-group .btn {
+            font-size: 12px;
+            padding: 6px 16px;
+        }
+
+        @media (max-width: 768px) {
+            .app {
+                padding: 20px;
+            }
+            .extract-images-row {
+                flex-wrap: wrap;
+            }
+            .extract-images-row .img-col {
+                flex: 1 1 45%;
+                min-width: 140px;
+            }
+        }
+        @media (max-width: 480px) {
+            .app {
+                padding: 12px;
+            }
+            .tabs {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+            .tab-btn {
+                border-radius: 20px;
+            }
+            .extract-images-row .img-col {
+                flex: 1 1 100%;
+            }
+            .extract-download-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .extract-download-wrapper .btn-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <!-- Navigation -->
+        <div class="nav">
+            <a href="index.html">🏠 Home</a>
+            <a href="option1.html">🧪 Option 1 – Detail</a>
+            <a href="option2.html">🔐 Option 2 – Stegano</a>
+            <a href="option3.html">📦 Option 3 – Export</a>
+            <a href="option4.html" class="active">🚀 Option 4 – Full‑Res</a>
+        </div>
+
+        <div class="header-title">
+            <h2>🚀 Option 4 – Full‑Resolution Stegano + Scramble + Encrypt</h2>
+            <p>Choose to <strong>scramble the image</strong> (visual encryption), <strong>hide a secret message</strong>, or <strong>do both</strong>.</p>
+        </div>
+
+        <!-- ===== TABS ===== -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="embed">🔒 Encrypt / Embed</button>
+            <button class="tab-btn" data-tab="extract">🔓 Decrypt / Extract</button>
+        </div>
+
+        <!-- ===== TAB 1: EMBED ===== -->
+        <div id="tab-embed" class="tab-content active">
+            <div class="controls">
+                <button class="btn btn-primary" id="uploadBtn">📁 Choose Image</button>
+                <button class="btn btn-secondary" id="pasteBtn">📋 Paste</button>
+                <button class="btn btn-warning" id="embedBtn" disabled>▶ Apply</button>
+                <button class="btn btn-success" id="downloadBtn" disabled>⬇ Download PNG</button>
+                <button class="btn btn-danger" id="resetBtn">↻ Reset</button>
+                <input type="file" id="fileInput" class="file-input" accept="image/*" />
+            </div>
+
+            <div class="mode-selector" id="embedModeSelector">
+                <span class="mode-label">Mode:</span>
+                <label><input type="radio" name="embedMode" value="scramble" /> 🔀 Scramble Image Only</label>
+                <label><input type="radio" name="embedMode" value="text" checked /> 📝 Hide Text Only</label>
+                <label><input type="radio" name="embedMode" value="both" /> 🔀 + 📝 Both</label>
+            </div>
+
+            <div class="password-group" id="embedPasswords">
+                <label><span>🔐 Text Password:</span><input type="password" id="msgPassword" placeholder="For text" /></label>
+                <label><span>🔀 Scramble Password:</span><input type="password" id="scramblePassword" placeholder="For scrambling" /></label>
+            </div>
+
+            <div id="embedPreview" style="display: none;">
+                <div class="preview-row">
+                    <div class="preview-col"><div class="label">📷 Original Image</div><div class="canvas-wrap"><img id="original" alt="Original" /></div><div class="size-badge" id="originalSize">—</div></div>
+                    <div class="preview-col"><div class="label">🔒 Output Image</div><div class="canvas-wrap"><img id="stegoImage" alt="Stego image" /></div><div class="size-badge" id="stegoSize">—</div></div>
+                </div>
+            </div>
+
+            <div class="msg-area">
+                <div class="msg-meta">
+                    <span class="msg-hint">Enter your secret message (only needed for Text or Both modes). <span id="capacityLabel">Capacity: —</span></span>
+                    <span id="charCount" class="char-count">0 / 0</span>
+                </div>
+                <textarea id="msgInput" class="msg-textarea" rows="6" placeholder="Your secret message..."></textarea>
+                <div class="action-row"><button class="btn btn-secondary" id="downloadBtn2" disabled>⬇ Download PNG</button></div>
+            </div>
+        </div>
+
+        <!-- ===== TAB 2: EXTRACT – redesigned layout ===== -->
+        <div id="tab-extract" class="tab-content">
+            <div class="controls">
+                <button class="btn btn-primary" id="uploadStegoBtn">📂 Upload Stego PNG</button>
+                <button class="btn btn-success" id="extractBtn" disabled>🔓 Apply</button>
+                <input type="file" id="stegoFileInput" class="file-input" accept="image/png" />
+            </div>
+
+            <div class="mode-selector" id="extractModeSelector">
+                <span class="mode-label">Mode:</span>
+                <label><input type="radio" name="extractMode" value="scramble" /> 🔀 Unscramble Only</label>
+                <label><input type="radio" name="extractMode" value="text" checked /> 📝 Extract Text Only</label>
+                <label><input type="radio" name="extractMode" value="both" /> 🔀 + 📝 Both</label>
+            </div>
+
+            <div class="password-group" id="extractPasswords">
+                <label><span>🔐 Text Password:</span><input type="password" id="extractMsgPassword" placeholder="For text" /></label>
+                <label><span>🔀 Scramble Password:</span><input type="password" id="unscramblePassword" placeholder="For scrambling" /></label>
+            </div>
+
+            <!-- ===== EXTRACT PREVIEW – three sections ===== -->
+            <div id="extractPreview" style="display: none;">
+
+                <!-- 1) IMAGES – side by side -->
+                <div class="extract-section">
+                    <div class="section-title">
+                        <span>🖼️ Image Comparison</span>
+                        <span class="line"></span>
+                    </div>
+                    <div class="extract-images-row">
+                        <div class="img-col">
+                            <div class="label">📤 Uploaded Scrambled <span class="badge">input</span></div>
+                            <div class="canvas-wrap"><img id="uploadedStego" alt="Uploaded" /></div>
+                            <div class="size-badge" id="uploadedStegoSize">—</div>
+                        </div>
+                        <div class="img-col">
+                            <div class="label">🔄 Unscrambled <span class="badge">output</span></div>
+                            <div class="canvas-wrap"><img id="unscrambledImage" alt="Unscrambled" /></div>
+                            <div class="size-badge" id="unscrambledSize">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2) TEXT – below images -->
+                <div class="extract-text-wrapper" id="extractTextWrapper">
+                    <div class="text-header">
+                        <span class="label">💬 Extracted Message <span class="badge" id="extractedBadge">—</span></span>
+                    </div>
+                    <div class="text-body" id="extractedContent"><span class="placeholder">—</span></div>
+                </div>
+
+                <!-- 3) DOWNLOAD OPTIONS – below text -->
+                <div class="extract-download-wrapper" id="downloadAreaExtract">
+                    <span class="dl-label">📥 Download</span>
+                    <div class="filename-group">
+                        <span>Filename:</span>
+                        <input type="text" id="pdfFilename" class="filename-input" value="my_secret" />
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" id="downloadTextBtn" style="display:none;">📄 Text (.txt)</button>
+                        <button class="btn btn-secondary" id="downloadImageBtn" style="display:none;">🖼️ Image (.png)</button>
+                        <button class="btn btn-purple" id="downloadPdfBtn" style="display:none;">📕 PDF (Image + Text)</button>
+                    </div>
+                </div>
+
+            </div><!-- /extractPreview -->
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="status">📁 Choose an image or paste from clipboard</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // DOM REFS – Embed Tab
+        // ============================================================
+        const fileInput = document.getElementById('fileInput');
+        const stegoFileInput = document.getElementById('stegoFileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const embedBtn = document.getElementById('embedBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadBtn2 = document.getElementById('downloadBtn2');
+        const resetBtn = document.getElementById('resetBtn');
+        const originalImg = document.getElementById('original');
+        const stegoImg = document.getElementById('stegoImage');
+        const embedPreview = document.getElementById('embedPreview');
+        const status = document.getElementById('status');
+        const originalSizeEl = document.getElementById('originalSize');
+        const stegoSizeEl = document.getElementById('stegoSize');
+        const msgInput = document.getElementById('msgInput');
+        const charCount = document.getElementById('charCount');
+        const capacityLabel = document.getElementById('capacityLabel');
+        const msgPassword = document.getElementById('msgPassword');
+        const scramblePassword = document.getElementById('scramblePassword');
+        const embedModeRadios = document.querySelectorAll('input[name="embedMode"]');
+
+        // ============================================================
+        // DOM REFS – Extract Tab (updated)
+        // ============================================================
+        const uploadStegoBtn = document.getElementById('uploadStegoBtn');
+        const extractBtn = document.getElementById('extractBtn');
+        const uploadedStego = document.getElementById('uploadedStego');
+        const unscrambledImage = document.getElementById('unscrambledImage');
+        const extractPreview = document.getElementById('extractPreview');
+        const uploadedStegoSize = document.getElementById('uploadedStegoSize');
+        const unscrambledSize = document.getElementById('unscrambledSize');
+        const extractTextWrapper = document.getElementById('extractTextWrapper');
+        const extractedContent = document.getElementById('extractedContent');
+        const extractedBadge = document.getElementById('extractedBadge');
+        const extractMsgPassword = document.getElementById('extractMsgPassword');
+        const unscramblePassword = document.getElementById('unscramblePassword');
+        const extractModeRadios = document.querySelectorAll('input[name="extractMode"]');
+        const downloadAreaExtract = document.getElementById('downloadAreaExtract');
+        const downloadTextBtn = document.getElementById('downloadTextBtn');
+        const downloadImageBtn = document.getElementById('downloadImageBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const pdfFilename = document.getElementById('pdfFilename');
+
+        // ============================================================
+        // TABS
+        // ============================================================
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = { embed: document.getElementById('tab-embed'), extract: document.getElementById('tab-extract') };
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = btn.dataset.tab;
+                Object.keys(tabContents).forEach(key => { tabContents[key].classList.toggle('active', key === tab); });
+            });
+        });
+
+        // ============================================================
+        // MODE SYNC
+        // ============================================================
+        function syncModes() {
+            let embedMode = 'text';
+            for (const radio of embedModeRadios) { if (radio.checked) embedMode = radio.value; }
+            for (const radio of extractModeRadios) { if (radio.value === embedMode) radio.checked = true; }
+        }
+        embedModeRadios.forEach(radio => { radio.addEventListener('change', () => { if (radio.checked) syncModes(); }); });
+        extractModeRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    for (const embedRadio of embedModeRadios) { if (embedRadio.value === radio.value) embedRadio.checked =
+                        true; }
+                    const modeLabels = { 'scramble': 'Scramble Only', 'text': 'Text Only', 'both': 'Both' };
+                    setStatus(`✅ Mode synced: ${modeLabels[radio.value] || radio.value}`, 'success');
+                }
+            });
+        });
+        syncModes();
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let state = {
+            originalImageData: null,
+            originalImageDataCopy: null,
+            stegoImageData: null,
+            unscrambledImageData: null,
+            imageWidth: 0,
+            imageHeight: 0,
+            originalFileSize: 0,
+            stegoFileSize: 0,
+            capacityBytes: 0,
+            isScrambled: false,
+            scrambleSeed: '',
+            embedMode: 'text',
+            extractMode: 'text',
+            extractedText: '',
+            extractedTextLength: 0,
+        };
+
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function setStatus(msg, type = '') {
+            status.innerHTML = msg;
+            status.className = 'status' + (type ? ' ' + type : '');
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(2) + ' MB';
+        }
+
+        function getImageData(img) {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
+            return { imageData, canvas, ctx };
+        }
+
+        function canvasFromImageData(imageData) {
+            const canvas = document.createElement('canvas');
+            canvas.width = imageData.width;
+            canvas.height = imageData.height;
+            const ctx = canvas.getContext('2d');
+            ctx.putImageData(imageData, 0, 0);
+            return canvas;
+        }
+
+        // ============================================================
+        // CRYPTOGRAPHY (AES-GCM)
+        // ============================================================
+        async function encryptMessage(message, password) {
+            if (!password) return new TextEncoder().encode(message);
+            const encoder = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'),
+                iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(message));
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(encrypted), iv.length);
+            return combined;
+        }
+
+        async function decryptMessage(combinedData, password) {
+            if (!password) return new TextDecoder().decode(combinedData);
+            const encoder = new TextEncoder();
+            const iv = combinedData.slice(0, 12);
+            const data = combinedData.slice(12);
+            const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'),
+                iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, data);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ============================================================
+        // SCRAMBLING ENGINE
+        // ============================================================
+        function seededRandom(seed) {
+            let s = seed >>> 0;
+            return function() {
+                s |= 0;
+                s = s + 0x6D2B79F5 | 0;
+                let t = Math.imul(s ^ s >>> 15, 1 | s);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; }
+            return Math.abs(hash);
+        }
+
+        function scramblePixels(imageData, password) {
+            const data = imageData.data;
+            const totalPixels = imageData.width * imageData.height;
+            const seed = hashString(password);
+            const rand = seededRandom(seed);
+            const indices = [];
+            for (let i = 0; i < totalPixels; i++) indices.push(i);
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(rand() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+            }
+            const newData = new Uint8ClampedArray(data.length);
+            for (let i = 0; i < totalPixels; i++) {
+                const srcIdx = indices[i] * 4;
+                const dstIdx = i * 4;
+                newData[dstIdx] = data[srcIdx];
+                newData[dstIdx + 1] = data[srcIdx + 1];
+                newData[dstIdx + 2] = data[srcIdx + 2];
+                newData[dstIdx + 3] = data[srcIdx + 3];
+            }
+            const inverse = new Array(totalPixels);
+            for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
+            return { imageData: new ImageData(newData, imageData.width, imageData.height), inverse: inverse };
+        }
+
+        function unscramblePixels(imageData, password, inversePermutation) {
+            const data = imageData.data;
+            const totalPixels = imageData.width * imageData.height;
+            let inverse = inversePermutation;
+            if (!inverse) {
+                const seed = hashString(password);
+                const rand = seededRandom(seed);
+                const indices = [];
+                for (let i = 0; i < totalPixels; i++) indices.push(i);
+                for (let i = indices.length - 1; i > 0; i--) {
+                    const j = Math.floor(rand() * (i + 1));
+                    [indices[i], indices[j]] = [indices[j], indices[i]];
+                }
+                inverse = new Array(totalPixels);
+                for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
+            }
+            const newData = new Uint8ClampedArray(data.length);
+            for (let i = 0; i < totalPixels; i++) {
+                const srcIdx = inverse[i] * 4;
+                const dstIdx = i * 4;
+                newData[dstIdx] = data[srcIdx];
+                newData[dstIdx + 1] = data[srcIdx + 1];
+                newData[dstIdx + 2] = data[srcIdx + 2];
+                newData[dstIdx + 3] = data[srcIdx + 3];
+            }
+            return new ImageData(newData, imageData.width, imageData.height);
+        }
+
+        // ============================================================
+        // EMBED TAB
+        // ============================================================
+        async function loadImage(src, fileSize = 0) {
+            state.originalFileSize = fileSize;
+            setStatus('⏳ Loading image...', 'loading');
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                state.imageWidth = img.width;
+                state.imageHeight = img.height;
+                const { imageData } = getImageData(img);
+                state.originalImageData = imageData;
+                state.originalImageDataCopy = new Uint8ClampedArray(imageData.data);
+                originalImg.src = img.src;
+                stegoImg.src = img.src;
+                embedPreview.style.display = 'flex';
+                originalSizeEl.textContent = '📏 ' + formatSize(fileSize);
+                const totalPixels = img.width * img.height;
+                const capacityBits = totalPixels * 3;
+                state.capacityBytes = Math.floor(capacityBits / 8) - 2;
+                capacityLabel.textContent = `Capacity: ${formatSize(state.capacityBytes)} (${state.capacityBytes} chars)`;
+                charCount.textContent = `0 / ${state.capacityBytes}`;
+                embedBtn.disabled = false;
+                setStatus(`✅ Image loaded: ${img.width}×${img.height}.`, 'success');
+            };
+            img.src = src;
+        }
+
+        async function embedMessage() {
+            let mode = 'text';
+            for (const radio of embedModeRadios) { if (radio.checked) mode = radio.value; }
+            state.embedMode = mode;
+            const msg = msgInput.value;
+            const password = msgPassword.value;
+            const scramPW = scramblePassword.value;
+            if ((mode === 'text' || mode === 'both') && !msg) { setStatus('❌ Enter a message for Text or Both mode.',
+                    'error'); return; }
+            if ((mode === 'scramble' || mode === 'both') && !scramPW) { setStatus(
+                    '❌ Enter a scramble password for Scramble or Both mode.', 'error'); return; }
+
+            let imgData = new ImageData(new Uint8ClampedArray(state.originalImageDataCopy), state.imageWidth, state
+                .imageHeight);
+
+            if (mode === 'text' || mode === 'both') {
+                let messageBytes;
+                try { messageBytes = await encryptMessage(msg, password); } catch (e) { setStatus(
+                        '❌ Encryption failed: ' + e.message, 'error'); return; }
+                const totalBytes = 2 + messageBytes.length;
+                if (totalBytes > state.capacityBytes) { setStatus(`❌ Message too long! Max ${formatSize(state.capacityBytes)}.`,
+                        'error'); return; }
+                const data = new Uint8Array(2 + messageBytes.length);
+                data[0] = (messageBytes.length >> 8) & 0xFF;
+                data[1] = messageBytes.length & 0xFF;
+                data.set(messageBytes, 2);
+                const totalBits = data.length * 8;
+                const channels = [];
+                for (let i = 0; i < imgData.data.length; i += 4) { channels.push(imgData.data[i], imgData.data[i + 1],
+                        imgData.data[i + 2]); }
+                for (let i = 0; i < totalBits; i++) {
+                    const bit = (data[Math.floor(i / 8)] >> (7 - (i % 8))) & 1;
+                    channels[i] = (channels[i] & 0xFE) | bit;
+                }
+                let idx = 0;
+                for (let i = 0; i < imgData.data.length; i += 4) {
+                    imgData.data[i] = channels[idx++];
+                    imgData.data[i + 1] = channels[idx++];
+                    imgData.data[i + 2] = channels[idx++];
+                }
+            }
+
+            let finalImageData = imgData;
+            state.isScrambled = false;
+            if (mode === 'scramble' || mode === 'both') {
+                const result = scramblePixels(imgData, scramPW);
+                finalImageData = result.imageData;
+                state.isScrambled = true;
+                state.scrambleSeed = scramPW;
+            }
+            state.stegoImageData = finalImageData;
+            const canvas = canvasFromImageData(finalImageData);
+            stegoImg.src = canvas.toDataURL('image/png');
+            fetch(canvas.toDataURL('image/png')).then(r => r.blob()).then(blob => {
+                state.stegoFileSize = blob.size;
+                stegoSizeEl.textContent = '📏 ' + formatSize(blob.size);
+                downloadBtn.disabled = false;
+                downloadBtn2.disabled = false;
+            });
+            let statusMsg = '✅ ';
+            if (mode === 'scramble') statusMsg += 'Image scrambled.';
+            else if (mode === 'text') statusMsg += 'Text embedded.';
+            else statusMsg += 'Image scrambled and text embedded.';
+            setStatus(statusMsg + ' Download the PNG.', 'success');
+        }
+
+        function downloadStego() {
+            if (!state.stegoImageData) return;
+            const canvas = canvasFromImageData(state.stegoImageData);
+            const link = document.createElement('a');
+            link.download = 'stegano_fullres.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            setStatus('✅ PNG downloaded.', 'success');
+        }
+
+        function resetEmbed() {
+            state = { originalImageData: null, originalImageDataCopy: null, stegoImageData: null, imageWidth: 0,
+                imageHeight: 0, originalFileSize: 0, stegoFileSize: 0, capacityBytes: 0, isScrambled: false,
+                scrambleSeed: '', embedMode: 'text' };
+            originalImg.src = '';
+            stegoImg.src = '';
+            embedPreview.style.display = 'none';
+            embedBtn.disabled = true;
+            downloadBtn.disabled = true;
+            downloadBtn2.disabled = true;
+            originalSizeEl.textContent = '—';
+            stegoSizeEl.textContent = '—';
+            msgInput.value = '';
+            charCount.textContent = '0 / 0';
+            capacityLabel.textContent = 'Capacity: —';
+            setStatus('🔄 Reset.', '');
+            fileInput.value = '';
+        }
+
+        msgInput.addEventListener('input', () => {
+            const len = msgInput.value.length;
+            charCount.textContent = `${len} / ${state.capacityBytes}`;
+            if (len > state.capacityBytes) charCount.classList.add('exceeded');
+            else charCount.classList.remove('exceeded');
+        });
+
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (ev) => { await loadImage(ev.target.result, file.size); };
+            reader.readAsDataURL(file);
+            fileInput.value = '';
+        });
+
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const items = await navigator.clipboard.read();
+                for (const item of items) {
+                    if (item.types.some(t => t.startsWith('image/'))) {
+                        const blob = await item.getType(item.types.find(t => t.startsWith('image/')));
+                        const reader = new FileReader();
+                        reader.onload = async (ev) => { await loadImage(ev.target.result, blob.size); };
+                        reader.readAsDataURL(blob);
+                        return;
+                    }
+                }
+                setStatus('❌ No image in clipboard.', 'error');
+            } catch (err) { setStatus('❌ Clipboard error: ' + err.message, 'error'); }
+        });
+
+        embedBtn.addEventListener('click', embedMessage);
+        downloadBtn.addEventListener('click', downloadStego);
+        downloadBtn2.addEventListener('click', downloadStego);
+        resetBtn.addEventListener('click', resetEmbed);
+
+        // ============================================================
+        // EXTRACT TAB – updated with new layout logic
+        // ============================================================
+        function loadStegoImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataURL = e.target.result;
+                const img = new Image();
+                img.onload = function() {
+                    const { imageData } = getImageData(img);
+                    state.stegoImageData = imageData;
+                    state.imageWidth = img.width;
+                    state.imageHeight = img.height;
+                    uploadedStego.src = dataURL;
+                    unscrambledImage.src = '';
+                    // Reset the new layout
+                    extractPreview.style.display = 'block';
+                    uploadedStegoSize.textContent = '📏 ' + formatSize(file.size);
+                    unscrambledSize.textContent = '—';
+                    extractTextWrapper.style.display = 'none';
+                    extractedContent.innerHTML = '<span class="placeholder">—</span>';
+                    extractedBadge.textContent = '—';
+                    downloadAreaExtract.style.display = 'none';
+                    downloadTextBtn.style.display = 'none';
+                    downloadImageBtn.style.display = 'none';
+                    downloadPdfBtn.style.display = 'none';
+                    extractBtn.disabled = false;
+                    setStatus('✅ Image loaded. Select mode, enter passwords, and click "Apply".', 'success');
+                };
+                img.src = dataURL;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function extractMessage() {
+            if (!state.stegoImageData) { setStatus('❌ No image loaded.', 'error'); return; }
+
+            let mode = 'text';
+            for (const radio of extractModeRadios) { if (radio.checked) mode = radio.value; }
+            state.extractMode = mode;
+
+            const msgPW = extractMsgPassword.value;
+            const scramPW = unscramblePassword.value;
+
+            if ((mode === 'scramble' || mode === 'both') && !scramPW) { setStatus(
+                    '❌ Please enter the scramble password.', 'error'); return; }
+
+            let imgData = state.stegoImageData;
+            state.unscrambledImageData = null;
+
+            // Unscramble
+            if (mode === 'scramble' || mode === 'both') {
+                try {
+                    const unscrambled = unscramblePixels(imgData, scramPW);
+                    state.unscrambledImageData = unscrambled;
+                    imgData = unscrambled;
+                    const canvas = canvasFromImageData(unscrambled);
+                    unscrambledImage.src = canvas.toDataURL('image/png');
+                    // show size
+                    fetch(canvas.toDataURL('image/png')).then(r => r.blob()).then(blob => {
+                        unscrambledSize.textContent = '📏 ' + formatSize(blob.size);
+                    });
+                } catch (e) {
+                    setStatus('❌ Unscrambling failed. Wrong password?', 'error');
+                    return;
+                }
+            } else {
+                unscrambledImage.src = '';
+                unscrambledSize.textContent = '—';
+            }
+
+            // Extract text
+            let extractedText = '';
+            let foundMessage = false;
+
+            if (mode === 'text' || mode === 'both') {
+                const channels = [];
+                for (let i = 0; i < imgData.data.length; i += 4) {
+                    channels.push(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2]);
+                }
+
+                let bits = [];
+                for (let i = 0; i < 16; i++) bits.push(channels[i] & 1);
+                let len = 0;
+                for (let i = 0; i < 16; i++) len = (len << 1) | bits[i];
+
+                if (len !== 0 && len <= 1000000) {
+                    const totalBits = 16 + len * 8;
+                    if (totalBits <= channels.length) {
+                        const extractedBytes = new Uint8Array(len);
+                        for (let byteIdx = 0; byteIdx < len; byteIdx++) {
+                            let byteVal = 0;
+                            for (let bitPos = 0; bitPos < 8; bitPos++) {
+                                const bitIdx = 16 + byteIdx * 8 + bitPos;
+                                byteVal = (byteVal << 1) | (channels[bitIdx] & 1);
+                            }
+                            extractedBytes[byteIdx] = byteVal;
+                        }
+
+                        try {
+                            const plaintext = await decryptMessage(extractedBytes, msgPW);
+                            extractedText = plaintext;
+                            state.extractedText = plaintext;
+                            state.extractedTextLength = plaintext.length;
+                            foundMessage = true;
+                            // Show text
+                            extractTextWrapper.style.display = 'block';
+                            extractedContent.textContent = plaintext;
+                            extractedContent.className = 'text-body';
+                            extractedBadge.textContent = `${plaintext.length} characters`;
+                            setStatus(`✅ Extracted and decrypted message (${plaintext.length} characters).`,
+                            'success');
+                        } catch (e) {
+                            setStatus('❌ Decryption failed. Wrong password or corrupted data.', 'error');
+                            extractTextWrapper.style.display = 'block';
+                            extractedContent.innerHTML = '⚠️ Decryption failed. Wrong password?';
+                            extractedContent.className = 'text-body';
+                            extractedBadge.textContent = '⚠️';
+                            foundMessage = false;
+                        }
+                    }
+                }
+                if (!foundMessage && mode === 'text') {
+                    setStatus('❌ No valid message found.', 'error');
+                    extractTextWrapper.style.display = 'block';
+                    extractedContent.innerHTML = '⚠️ No message detected.';
+                    extractedContent.className = 'text-body';
+                    extractedBadge.textContent = '⚠️';
+                }
+            } else {
+                // Scramble only mode
+                extractTextWrapper.style.display = 'block';
+                extractedContent.textContent = '— (Scramble only mode)';
+                extractedContent.className = 'text-body';
+                extractedBadge.textContent = '—';
+                state.extractedText = '';
+                state.extractedTextLength = 0;
+                setStatus('✅ Image unscrambled successfully.', 'success');
+            }
+
+            // Show download options
+            downloadAreaExtract.style.display = 'flex';
+            downloadTextBtn.style.display = 'none';
+            downloadImageBtn.style.display = 'none';
+            downloadPdfBtn.style.display = 'none';
+
+            if (mode === 'text' && foundMessage) {
+                downloadTextBtn.style.display = 'inline-block';
+                downloadTextBtn.textContent = '📄 Text (.txt)';
+            } else if (mode === 'scramble' && state.unscrambledImageData) {
+                downloadImageBtn.style.display = 'inline-block';
+                downloadImageBtn.textContent = '🖼️ Image (.png)';
+            } else if (mode === 'both' && foundMessage && state.unscrambledImageData) {
+                downloadTextBtn.style.display = 'inline-block';
+                downloadTextBtn.textContent = '📄 Text (.txt)';
+                downloadImageBtn.style.display = 'inline-block';
+                downloadImageBtn.textContent = '🖼️ Image (.png)';
+                downloadPdfBtn.style.display = 'inline-block';
+                downloadPdfBtn.textContent = '📕 PDF (Image + Text)';
+            }
+        }
+
+        function downloadText() {
+            const text = state.extractedText || extractedContent.textContent;
+            if (!text || text === '—' || text === '⚠️ No message detected.' || text ===
+                '⚠️ Decryption failed. Wrong password?') {
+                setStatus('❌ No text to download.', 'error');
+                return;
+            }
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = pdfFilename.value + '.txt';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            setStatus('✅ Text downloaded.', 'success');
+        }
+
+        function downloadImage() {
+            if (!state.unscrambledImageData) { setStatus('❌ No unscrambled image to download.', 'error'); return; }
+            const canvas = canvasFromImageData(state.unscrambledImageData);
+            const link = document.createElement('a');
+            link.download = pdfFilename.value + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            setStatus('✅ Image downloaded.', 'success');
+        }
+
+        // ============================================================
+        // PDF GENERATION – Fixed overlapping: content padded inside borders
+        // ============================================================
+        async function downloadPdf() {
+            if (!state.unscrambledImageData) {
+                setStatus('❌ No unscrambled image for PDF.', 'error');
+                return;
+            }
+            const text = state.extractedText || extractedContent.textContent;
+            if (!text || text === '—' || text === '⚠️ No message detected.' || text ===
+                '⚠️ Decryption failed. Wrong password?') {
+                setStatus('❌ No text for PDF.', 'error');
+                return;
+            }
+
+            try {
+                const filename = pdfFilename.value || 'output';
+                const imgCanvas = canvasFromImageData(state.unscrambledImageData);
+                const imgDataUrl = imgCanvas.toDataURL('image/png');
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                // ----- MINIMAL MARGINS – border almost touches page edges -----
+                const borderMarginX = pageWidth * 0.05;   // 5% left/right
+                const borderMarginY = pageHeight * 0.03;  // 3% top/bottom
+                const borderWidth = pageWidth - 2 * borderMarginX;
+                const borderHeight = pageHeight - 2 * borderMarginY;
+
+                // ----- INNER PADDING (12mm for comfortable spacing) -----
+                const innerPad = 12;
+                const contentX = borderMarginX + innerPad;
+                const contentY = borderMarginY + innerPad;
+                const contentWidth = borderWidth - 2 * innerPad;
+                const contentHeight = borderHeight - 2 * innerPad;
+
+                // ---- Decorative border ----
+                function drawDecorativeBorder() {
+                    pdf.setDrawColor(0, 0, 0);
+                    pdf.setLineWidth(1.2);
+                    pdf.rect(borderMarginX, borderMarginY, borderWidth, borderHeight);
+                    pdf.setLineWidth(0.4);
+                    pdf.rect(borderMarginX + 3, borderMarginY + 3, borderWidth - 6, borderHeight - 6);
+                    pdf.setLineWidth(0.2);
+                    pdf.rect(borderMarginX + 6, borderMarginY + 6, borderWidth - 12, borderHeight - 12);
+                }
+
+                drawDecorativeBorder();
+
+                // ----- START CONTENT AT THE TOP OF THE INNER AREA -----
+                let currentY = contentY;
+
+                // ---- Title (centered) ----
+                pdf.setFont('Times', 'bold');
+                pdf.setFontSize(20);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(filename, pageWidth / 2, currentY, { align: 'center' });
+                currentY += 10;   // gap after title
+
+                // ---- Image (centered) ----
+                const img = new Image();
+                img.src = imgDataUrl;
+                await new Promise((resolve) => { img.onload = resolve; });
+
+                const maxImgWidth = contentWidth * 0.85;
+                const maxImgHeight = 70;
+                let imgWidth = img.width, imgHeight = img.height;
+                const imgAspect = imgWidth / imgHeight;
+                if (imgWidth > maxImgWidth) { imgWidth = maxImgWidth; imgHeight = imgWidth / imgAspect; }
+                if (imgHeight > maxImgHeight) { imgHeight = maxImgHeight; imgWidth = imgHeight * imgAspect; }
+                const imgX = contentX + (contentWidth - imgWidth) / 2;   // centered
+                pdf.addImage(imgDataUrl, 'PNG', imgX, currentY, imgWidth, imgHeight);
+                currentY += imgHeight + 8;
+
+                // ---- Text: SINGLE COLUMN, LEFT‑ALIGNED ----
+                const paragraphs = text.split('\n\n').filter(p => p.trim().length > 0);
+                pdf.setFont('Times', 'roman');
+                pdf.setFontSize(11);
+                pdf.setTextColor(0, 0, 0);
+
+                const colWidth = contentWidth;
+                let colX = contentX;
+                let colY = currentY;
+
+                function addNewPage() {
+                    pdf.addPage();
+                    drawDecorativeBorder();
+                    // Title centered on new page
+                    pdf.setFont('Times', 'bold');
+                    pdf.setFontSize(20);
+                    pdf.text(filename, pageWidth / 2, contentY, { align: 'center' });
+                    pdf.setFont('Times', 'roman');
+                    pdf.setFontSize(11);
+                    colX = contentX;
+                    colY = contentY + 10;   // match title gap
+                }
+
+                paragraphs.forEach((para) => {
+                    const lines = pdf.splitTextToSize(para.trim(), colWidth);
+                    lines.forEach(line => {
+                        // Check if we need a new page
+                        if (colY > contentY + contentHeight - 6) {
+                            addNewPage();
+                        }
+                        // Left‑align text
+                        pdf.text(line, colX, colY);
+                        colY += 5.5;
+                    });
+                    // Paragraph spacing
+                    colY += 4;
+                });
+
+                // ---- Page numbers ----
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFont('Times', 'italic');
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(100);
+                    pdf.text(`Page ${i} / ${totalPages}`, pageWidth / 2, borderMarginY + borderHeight + 6, { align: 'center' });
+                }
+
+                pdf.save(filename + '.pdf');
+                setStatus('✅ PDF downloaded – title & image centered, text left‑aligned.', 'success');
+            } catch (e) {
+                setStatus('❌ PDF generation failed: ' + e.message, 'error');
+            }
+        }
+
+        // ---- Extract events ----
+        uploadStegoBtn.addEventListener('click', () => stegoFileInput.click());
+        stegoFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) loadStegoImage(file);
+            stegoFileInput.value = '';
+        });
+        extractBtn.addEventListener('click', extractMessage);
+        downloadTextBtn.addEventListener('click', downloadText);
+        downloadImageBtn.addEventListener('click', downloadImage);
+        downloadPdfBtn.addEventListener('click', downloadPdf);
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        setStatus('📁 Choose an image or paste from clipboard');
+    </script>
+</body>
+</html>
