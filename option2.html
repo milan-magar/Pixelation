@@ -8,93 +8,159 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ============================================
+               HACKER THEME – GREEN ON BLACK
+               ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f4f8;
-            color: #1a202c;
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #00ff00;
             min-height: 100vh;
             padding: 24px;
+            background-image: repeating-linear-gradient(0deg,
+                    rgba(0, 255, 0, 0.03) 0px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    transparent 2px,
+                    transparent 4px);
         }
+
+        /* ---- Scrollbar ---- */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid #003300;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #003300;
+            border: 1px solid #00ff00;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #004400;
+        }
+
         .app {
             max-width: 1000px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 32px;
+            background: #0d0d0d;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.08), inset 0 0 40px rgba(0, 255, 0, 0.02);
+            border-radius: 8px;
             padding: 32px 36px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            position: relative;
         }
+        .app::before {
+            content: "┌──[ OPTION 2 – STEGANO ]──┐";
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background: #0d0d0d;
+            padding: 0 12px;
+            color: #00aa00;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
         .nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 4px;
             margin-bottom: 28px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #003300;
             padding-bottom: 12px;
         }
         .nav a {
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            padding: 8px 18px;
-            border-radius: 40px;
+            padding: 6px 14px;
+            border-radius: 4px;
             transition: all 0.2s;
-            color: #4a5568;
+            color: #00aa00;
+            border: 1px solid transparent;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .nav a:hover {
-            background: #edf2f7;
-            color: #2d3748;
+            background: #001a00;
+            color: #00ff00;
+            border-color: #004400;
         }
         .nav a.active {
-            background: #ebf4ff;
-            color: #3b82f6;
+            background: #001a00;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
         }
+
         .header-title {
             text-align: center;
             margin-bottom: 24px;
+            border: 1px solid #003300;
+            padding: 10px 0;
+            background: #080808;
         }
         .header-title h2 {
             font-weight: 700;
-            font-size: 26px;
-            letter-spacing: -0.5px;
-            color: #1a202c;
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: #00ff00;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
         }
         .header-title p {
-            color: #4a5568;
-            margin-top: 6px;
-            font-size: 15px;
+            color: #00aa00;
+            margin-top: 4px;
+            font-size: 13px;
+            letter-spacing: 1px;
         }
 
-        /* --- Tabs --- */
+        /* --- Tabs (hacker style) --- */
         .tabs {
             display: flex;
             gap: 4px;
-            background: #f1f5f9;
-            border-radius: 40px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 4px;
             margin-bottom: 28px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
         }
         .tab-btn {
             flex: 1;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 36px;
-            font-family: 'Inter', sans-serif;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
             background: transparent;
-            color: #4a5568;
+            color: #00aa00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .tab-btn:hover {
-            background: rgba(255,255,255,0.5);
+            background: #001a00;
+            color: #00ff00;
+            border-color: #004400;
         }
         .tab-btn.active {
-            background: #ffffff;
-            color: #1a202c;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: #001a00;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 16px rgba(0, 255, 0, 0.05);
         }
         .tab-content {
             display: none;
@@ -103,31 +169,7 @@
             display: block;
         }
 
-        /* --- Controls & Cards --- */
-        .card {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid #e2e8f0;
-            margin-top: 16px;
-        }
-        .card h3 {
-            font-weight: 600;
-            font-size: 17px;
-            margin-bottom: 16px;
-            color: #2d3748;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card .badge {
-            font-size: 12px;
-            font-weight: 500;
-            background: #ebf4ff;
-            color: #3b82f6;
-            padding: 2px 12px;
-            border-radius: 40px;
-        }
+        /* --- Controls --- */
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -136,74 +178,116 @@
             margin-bottom: 16px;
         }
         .btn {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Courier New', monospace;
             font-weight: 600;
-            font-size: 13px;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 40px;
+            font-size: 12px;
+            padding: 6px 16px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
-            background: #edf2f7;
-            color: #2d3748;
-            border: 1px solid #e2e8f0;
+            background: transparent;
+            color: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .btn:hover:not(:disabled) {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.15);
+            transform: translateY(-2px);
         }
         .btn:disabled {
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
         .btn-primary {
-            background: #3b82f6;
-            border-color: transparent;
-            color: #fff;
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
         }
         .btn-primary:hover:not(:disabled) {
-            background: #2563eb;
+            background: #003300;
+            border-color: #66ff66;
+            color: #66ff66;
         }
         .btn-secondary {
-            background: #e2e8f0;
-            border-color: #cbd5e0;
+            border-color: #004400;
+            color: #00aa00;
         }
         .btn-secondary:hover:not(:disabled) {
-            background: #cbd5e0;
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
         }
         .btn-success {
-            background: #22c55e;
-            border-color: transparent;
-            color: #fff;
+            border-color: #00ff00;
+            color: #00ff00;
+            background: #001a00;
         }
         .btn-success:hover:not(:disabled) {
-            background: #16a34a;
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
         }
         .btn-warning {
-            background: #f59e0b;
-            border-color: transparent;
-            color: #fff;
+            border-color: #aaaa00;
+            color: #ffff00;
+            background: #1a1a00;
         }
         .btn-warning:hover:not(:disabled) {
-            background: #d97706;
+            background: #333300;
+            border-color: #ffff00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.15);
         }
         .btn-danger {
-            background: #ef4444;
-            border-color: transparent;
-            color: #fff;
+            border-color: #aa0000;
+            color: #ff3333;
+            background: #1a0000;
         }
         .btn-danger:hover:not(:disabled) {
-            background: #dc2626;
+            background: #330000;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
         }
-        .file-input { display: none; }
+        .file-input {
+            display: none;
+        }
+
+        .card {
+            background: #0a0a0a;
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid #003300;
+            margin-top: 16px;
+        }
+        .card h3 {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 16px;
+            color: #00ff00;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        .card .badge {
+            font-size: 11px;
+            font-weight: 400;
+            background: #001a00;
+            color: #00aa00;
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1px solid #003300;
+        }
 
         .canvas-wrap {
-            background: #ffffff;
-            border-radius: 16px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
             display: inline-block;
             width: 100%;
             text-align: center;
@@ -213,40 +297,45 @@
             display: block;
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
+            border-radius: 4px;
             image-rendering: pixelated;
-            background: #ffffff;
+            background: #0a0a0a;
             margin: 0 auto;
+            border: 1px solid #001a00;
         }
+
         .pixel-grid {
             display: grid;
             grid-template-columns: repeat(28, 1fr);
             gap: 1px;
             width: 100%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1/1;
             max-width: 280px;
             margin: 0 auto;
-            border-radius: 10px;
+            border-radius: 4px;
             overflow: hidden;
-            background: #e2e8f0;
-            border: 1px solid #cbd5e0;
+            background: #003300;
+            border: 1px solid #00ff00;
         }
         .pixel {
             aspect-ratio: 1;
-            background: #e2e8f0;
+            background: #001a00;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             position: relative;
             z-index: 0;
             will-change: transform;
         }
         .pixel:hover {
-            transform: scale(1.08);
+            transform: scale(1.06);
             z-index: 1;
-            border: 1px solid #3b82f6;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+            outline: 1px solid #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
             border-radius: 2px;
         }
-        .grid-center { display: flex; justify-content: center; }
+        .grid-center {
+            display: flex;
+            justify-content: center;
+        }
 
         .preview-row {
             display: flex;
@@ -260,18 +349,21 @@
             min-width: 120px;
         }
         .preview-col .label {
-            font-size: 13px;
-            color: #4a5568;
+            font-size: 12px;
+            color: #00aa00;
             margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .size-badge {
-            background: #edf2f7;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            color: #4a5568;
+            background: #001a00;
+            padding: 2px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #00aa00;
             display: inline-block;
             margin-top: 6px;
+            border: 1px solid #003300;
         }
 
         /* --- Message Input & Display --- */
@@ -281,19 +373,21 @@
         .msg-textarea {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #cbd5e0;
-            border-radius: 12px;
-            font-family: 'Inter', monospace;
+            border: 1px solid #003300;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
             font-size: 14px;
-            background: #fff;
-            color: #1a202c;
+            background: #0a0a0a;
+            color: #00ff00;
             resize: vertical;
             line-height: 1.6;
             min-height: 80px;
+            outline: none;
+            transition: border 0.2s;
         }
         .msg-textarea:focus {
-            outline: 2px solid #3b82f6;
-            border-color: transparent;
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
         }
         .msg-meta {
             display: flex;
@@ -304,16 +398,17 @@
             gap: 8px;
         }
         .msg-hint {
-            font-size: 12px;
-            color: #94a3b8;
+            font-size: 11px;
+            color: #005500;
+            letter-spacing: 0.5px;
         }
         .char-count {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            color: #4a5568;
+            color: #00aa00;
         }
         .char-count.exceeded {
-            color: #ef4444;
+            color: #ff3333;
         }
         .action-row {
             display: flex;
@@ -325,80 +420,104 @@
 
         .extract-box {
             padding: 12px 16px;
-            background: #edf2f7;
-            border-radius: 12px;
-            color: #4a5568;
-            font-size: 14px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            color: #00aa00;
+            font-size: 13px;
             word-break: break-word;
             white-space: pre-wrap;
-            font-family: 'Inter', monospace;
+            font-family: 'Courier New', monospace;
             min-height: 52px;
             display: flex;
             align-items: center;
+            border: 1px solid #003300;
         }
         .extract-box span {
-            color: #1a202c;
+            color: #00ff00;
             font-weight: 600;
         }
+
         .accepted-formats {
-            font-size: 12px;
-            color: #94a3b8;
+            font-size: 11px;
+            color: #005500;
             margin-top: 2px;
         }
+
         .status {
-            background: #f1f5f9;
-            border-radius: 40px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 12px 20px;
             margin-top: 16px;
-            font-size: 14px;
-            color: #4a5568;
+            font-size: 13px;
+            color: #00aa00;
             text-align: center;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
             min-height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-family: 'Courier New', monospace;
         }
         .status.success {
-            color: #16a34a;
-            border-color: #bbf7d0;
-            background: #f0fdf4;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.05);
         }
         .status.error {
-            color: #dc2626;
-            border-color: #fecaca;
-            background: #fef2f2;
+            color: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
         }
         .status.loading {
-            color: #2563eb;
-            border-color: #bfdbfe;
-            background: #eff6ff;
+            color: #ffff00;
+            border-color: #aaaa00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.05);
         }
         .spinner {
             display: inline-block;
             width: 18px;
             height: 18px;
-            border: 2px solid #e2e8f0;
-            border-top-color: #3b82f6;
+            border: 2px solid #003300;
+            border-top-color: #00ff00;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
+
         .scale-hint {
-            font-size: 13px;
-            color: #64748b;
+            font-size: 12px;
+            color: #005500;
             margin-top: 4px;
+            letter-spacing: 0.5px;
         }
+
         @media (max-width: 768px) {
-            .app { padding: 20px; }
+            .app {
+                padding: 20px;
+            }
+            .app::before {
+                content: "┌──[ OPT2 ]──┐";
+                font-size: 10px;
+                left: 10px;
+                top: -12px;
+            }
         }
         @media (max-width: 480px) {
-            .app { padding: 12px; }
-            .tabs { flex-direction: column; border-radius: 20px; }
-            .tab-btn { border-radius: 20px; }
+            .app {
+                padding: 12px;
+            }
+            .tabs {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+            .tab-btn {
+                border-radius: 20px;
+            }
         }
     </style>
 </head>
@@ -408,9 +527,11 @@
     <!-- Navigation -->
     <div class="nav">
         <a href="index.html">🏠 Home</a>
-        <a href="option1.html">🧪 Option 1 – Detail</a>
-        <a href="option2.html" class="active">🔐 Option 2 – Stegano</a>
-        <a href="option3.html">📦 Option 3 – Export</a>
+        <a href="option1.html">🧪 Opt 1</a>
+        <a href="option2.html" class="active">🔐 Opt 2</a>
+        <a href="option3.html">📦 Opt 3</a>
+        <a href="option4.html">🚀 Opt 4</a>
+        <a href="option5.html">✏️ Opt 5</a>
     </div>
 
     <div class="header-title">
@@ -445,7 +566,7 @@
                         <div class="canvas-wrap"><img id="original" alt="Original" style="max-height:140px; width:auto;" /></div>
                     </div>
                     <div class="preview-col">
-                        <div class="label">🧩 28×28 Grid <span style="font-weight:400;font-size:11px;color:#94a3b8;">(with hidden data)</span></div>
+                        <div class="label">🧩 28×28 Grid <span style="font-weight:400;font-size:10px;color:#005500;">(with hidden data)</span></div>
                         <div class="canvas-wrap">
                             <div class="grid-center"><div class="pixel-grid" id="grid"></div></div>
                         </div>
@@ -456,10 +577,10 @@
 
             <!-- Message Area -->
             <div class="msg-area">
-                <textarea id="msgInput" class="msg-textarea" rows="4" placeholder="Enter your secret message (max 292 characters)..." maxlength="293"></textarea>
+                <textarea id="msgInput" class="msg-textarea" rows="4" placeholder="Enter your secret message (max 293 characters)..." maxlength="293"></textarea>
                 <div class="msg-meta">
                     <span class="msg-hint">ASCII only (English letters, numbers, punctuation, spaces)</span>
-                    <span id="charCount" class="char-count">0 / 292</span>
+                    <span id="charCount" class="char-count">0 / 293</span>
                 </div>
                 <div class="action-row">
                     <button class="btn btn-secondary" id="downloadBtn" disabled>⬇ Download PNG (15×)</button>
@@ -582,7 +703,8 @@
             const img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = function() {
-                const w = img.width, h = img.height;
+                const w = img.width,
+                    h = img.height;
                 const size = Math.min(w, h);
                 const x = (w - size) / 2;
                 const y = (h - size) / 2;
@@ -620,14 +742,18 @@
                             const xEnd = Math.floor((col + 1) * blockW);
                             const yStart = Math.floor(row * blockH);
                             const yEnd = Math.floor((row + 1) * blockH);
-                            let sumR = 0, sumG = 0, sumB = 0, sumA = 0, count = 0;
+                            let sumR = 0,
+                                sumG = 0,
+                                sumB = 0,
+                                sumA = 0,
+                                count = 0;
                             for (let y = yStart; y < yEnd; y++) {
                                 for (let x = xStart; x < xEnd; x++) {
                                     const idx = (y * size + x) * 4;
                                     sumR += data[idx];
-                                    sumG += data[idx+1];
-                                    sumB += data[idx+2];
-                                    sumA += data[idx+3];
+                                    sumG += data[idx + 1];
+                                    sumB += data[idx + 2];
+                                    sumA += data[idx + 3];
                                     count++;
                                 }
                             }
@@ -640,7 +766,7 @@
                         }
                     }
                     resolve({ pixelData });
-                } catch(e) { reject(e); }
+                } catch (e) { reject(e); }
             };
             img.onerror = () => reject(new Error('Failed to load square image.'));
             img.src = squareDataURL;
@@ -733,7 +859,10 @@
             const d = imgData.data;
             state.pixelData.forEach((p, i) => {
                 const j = i * 4;
-                d[j] = p.r; d[j+1] = p.g; d[j+2] = p.b; d[j+3] = p.a;
+                d[j] = p.r;
+                d[j + 1] = p.g;
+                d[j + 2] = p.b;
+                d[j + 3] = p.a;
             });
             rawCtx.putImageData(imgData, 0, 0);
             const rawPNG = rawCanvas.toDataURL('image/png');
@@ -743,7 +872,7 @@
             embedBtn.disabled = false;
             downloadBtn.disabled = false;
             setStatus('✅ Grid ready. Enter a message and click "Embed".', 'success');
-        } catch(err) {
+        } catch (err) {
             setStatus('❌ Error: ' + err.message, 'error');
         }
     }
@@ -764,7 +893,6 @@
         }
 
         const msgBytes = new TextEncoder().encode(msg);
-        // Use 2 bytes for length (big-endian)
         const lenBytes = lengthToBytes(msgBytes.length);
         const data = new Uint8Array(2 + msgBytes.length);
         data[0] = lenBytes[0];
@@ -772,7 +900,7 @@
         data.set(msgBytes, 2);
         const totalBits = data.length * 8;
 
-        if (totalBits > 28*28*3) {
+        if (totalBits > 28 * 28 * 3) {
             setStatus('❌ Message too long for this 28×28 grid.', 'error');
             return;
         }
@@ -855,7 +983,7 @@
                 }
             }
             setStatus('❌ No image in clipboard.', 'error');
-        } catch(err) {
+        } catch (err) {
             setStatus('❌ Clipboard error: ' + err.message, 'error');
         }
     });
@@ -874,7 +1002,8 @@
             const dataURL = e.target.result;
             const img = new Image();
             img.onload = function() {
-                let w = img.width, h = img.height;
+                let w = img.width,
+                    h = img.height;
                 let finalDataURL = dataURL;
                 let descaleMsg = '';
 
@@ -909,9 +1038,9 @@
                         const idx = i * 4;
                         pixelData.push({
                             r: data[idx],
-                            g: data[idx+1],
-                            b: data[idx+2],
-                            a: data[idx+3]
+                            g: data[idx + 1],
+                            b: data[idx + 2],
+                            a: data[idx + 3]
                         });
                     }
                     state.uploadedPixelData = pixelData;
@@ -919,7 +1048,8 @@
 
                     uploadedGrid.src = finalDataURL;
                     extractPreview.style.display = 'block';
-                    uploadedGridSize.textContent = '📏 ' + formatSize(file.size) + (descaleMsg ? ' (' + descaleMsg + ')' : '');
+                    uploadedGridSize.textContent = '📏 ' + formatSize(file.size) + (descaleMsg ? ' (' + descaleMsg + ')' :
+                        '');
                     extractBtn.disabled = false;
                     extractedMessage.textContent = '—';
                     setStatus('✅ Grid ready. Click "Extract Message".', 'success');
@@ -940,12 +1070,10 @@
         const channels = [];
         state.uploadedPixelData.forEach(p => { channels.push(p.r, p.g, p.b); });
 
-        // Read first 16 bits to get message length (2 bytes, big-endian)
         let lenBits = [];
         for (let i = 0; i < 16; i++) {
             lenBits.push(channels[i] & 1);
         }
-        // Convert bits to number
         let len = 0;
         for (let i = 0; i < 16; i++) {
             len = (len << 1) | lenBits[i];
@@ -979,7 +1107,7 @@
             const msg = decoder.decode(data);
             extractedMessage.textContent = msg;
             setStatus(`✅ Extracted message (${msg.length} characters).`, 'success');
-        } catch(e) {
+        } catch (e) {
             setStatus('❌ Decode failed.', 'error');
             extractedMessage.textContent = '⚠️ Decoding failed.';
         }
