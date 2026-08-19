@@ -2,7 +2,7 @@
 
 A collection of interactive web tools for **pixel‑level image analysis**, **reconstruction**, **steganography**, and **visual encryption**. All processing happens client‑side – no data is ever sent to any server.
 
-🔗 **Live Demo:** [https://your-username.github.io/pixel-research-suite](https://milan-magar.github.io/Pixelation/))
+🔗 **Live Demo:** [https://milan-magar.github.io/Pixelation/](https://milan-magar.github.io/Pixelation/)
 
 ---
 
