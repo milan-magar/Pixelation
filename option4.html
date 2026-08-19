@@ -128,7 +128,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- Tabs (hacker style) --- */
+        /* --- Tabs --- */
         .tabs {
             display: flex;
             gap: 4px;
@@ -314,6 +314,7 @@
             border: 1px solid #003300;
         }
 
+        /* ---- Extracted text – monospace "CIA document" style ---- */
         .extract-text-area {
             margin-top: 16px;
             padding: 16px;
@@ -343,8 +344,8 @@
             border: 1px solid #003300;
         }
         .extract-text-area .content {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
             color: #00ff00;
             background: #0a0a0a;
             padding: 12px 16px;
@@ -353,7 +354,9 @@
             min-height: 52px;
             word-break: break-word;
             white-space: pre-wrap;
-            line-height: 1.7;
+            line-height: 1.8;
+            /* Typewriter feel */
+            letter-spacing: 0.3px;
         }
         .extract-text-area .content .placeholder {
             color: #005500;
@@ -769,7 +772,7 @@
             </div>
         </div>
 
-        <!-- ===== TAB 2: EXTRACT – redesigned layout ===== -->
+        <!-- ===== TAB 2: EXTRACT ===== -->
         <div id="tab-extract" class="tab-content">
             <div class="controls">
                 <button class="btn btn-primary" id="uploadStegoBtn">📂 Upload Stego PNG</button>
@@ -789,10 +792,10 @@
                 <label><span>🔀 Scramble Password:</span><input type="password" id="unscramblePassword" placeholder="For scrambling" /></label>
             </div>
 
-            <!-- ===== EXTRACT PREVIEW – three sections ===== -->
+            <!-- ===== EXTRACT PREVIEW ===== -->
             <div id="extractPreview" style="display: none;">
 
-                <!-- 1) IMAGES – side by side -->
+                <!-- 1) IMAGES -->
                 <div class="extract-section">
                     <div class="section-title">
                         <span>🖼️ Image Comparison</span>
@@ -812,16 +815,16 @@
                     </div>
                 </div>
 
-                <!-- 2) TEXT – below images -->
-                <div class="extract-text-wrapper" id="extractTextWrapper">
-                    <div class="text-header">
-                        <span class="label">💬 Extracted Message <span class="badge" id="extractedBadge">—</span></span>
+                <!-- 2) TEXT – Monospace "CIA document" style -->
+                <div class="extract-text-area" id="extractTextWrapper">
+                    <div class="label">
+                        💬 Extracted Message <span class="badge" id="extractedBadge">—</span>
                     </div>
-                    <div class="text-body" id="extractedContent"><span class="placeholder">—</span></div>
+                    <div class="content" id="extractedContent"><span class="placeholder">—</span></div>
                 </div>
 
-                <!-- 3) DOWNLOAD OPTIONS – below text -->
-                <div class="extract-download-wrapper" id="downloadAreaExtract">
+                <!-- 3) DOWNLOAD OPTIONS -->
+                <div class="download-area-extract" id="downloadAreaExtract">
                     <span class="dl-label">📥 Download</span>
                     <div class="filename-group">
                         <span>Filename:</span>
@@ -867,7 +870,7 @@
         const embedModeRadios = document.querySelectorAll('input[name="embedMode"]');
 
         // ============================================================
-        // DOM REFS – Extract Tab (updated)
+        // DOM REFS – Extract Tab
         // ============================================================
         const uploadStegoBtn = document.getElementById('uploadStegoBtn');
         const extractBtn = document.getElementById('extractBtn');
@@ -1243,7 +1246,7 @@
         resetBtn.addEventListener('click', resetEmbed);
 
         // ============================================================
-        // EXTRACT TAB – updated with new layout logic
+        // EXTRACT TAB
         // ============================================================
         function loadStegoImage(file) {
             const reader = new FileReader();
@@ -1257,7 +1260,6 @@
                     state.imageHeight = img.height;
                     uploadedStego.src = dataURL;
                     unscrambledImage.src = '';
-                    // Reset the new layout
                     extractPreview.style.display = 'block';
                     uploadedStegoSize.textContent = '📏 ' + formatSize(file.size);
                     unscrambledSize.textContent = '—';
@@ -1292,7 +1294,6 @@
             let imgData = state.stegoImageData;
             state.unscrambledImageData = null;
 
-            // Unscramble
             if (mode === 'scramble' || mode === 'both') {
                 try {
                     const unscrambled = unscramblePixels(imgData, scramPW);
@@ -1300,7 +1301,6 @@
                     imgData = unscrambled;
                     const canvas = canvasFromImageData(unscrambled);
                     unscrambledImage.src = canvas.toDataURL('image/png');
-                    // show size
                     fetch(canvas.toDataURL('image/png')).then(r => r.blob()).then(blob => {
                         unscrambledSize.textContent = '📏 ' + formatSize(blob.size);
                     });
@@ -1313,7 +1313,6 @@
                 unscrambledSize.textContent = '—';
             }
 
-            // Extract text
             let extractedText = '';
             let foundMessage = false;
 
@@ -1347,18 +1346,17 @@
                             state.extractedText = plaintext;
                             state.extractedTextLength = plaintext.length;
                             foundMessage = true;
-                            // Show text
                             extractTextWrapper.style.display = 'block';
                             extractedContent.textContent = plaintext;
-                            extractedContent.className = 'text-body';
+                            extractedContent.className = 'content';
                             extractedBadge.textContent = `${plaintext.length} characters`;
                             setStatus(`✅ Extracted and decrypted message (${plaintext.length} characters).`,
                             'success');
                         } catch (e) {
                             setStatus('❌ Decryption failed. Wrong password or corrupted data.', 'error');
                             extractTextWrapper.style.display = 'block';
-                            extractedContent.innerHTML = '⚠️ Decryption failed. Wrong password?';
-                            extractedContent.className = 'text-body';
+                            extractedContent.textContent = '⚠️ Decryption failed. Wrong password?';
+                            extractedContent.className = 'content';
                             extractedBadge.textContent = '⚠️';
                             foundMessage = false;
                         }
@@ -1367,22 +1365,20 @@
                 if (!foundMessage && mode === 'text') {
                     setStatus('❌ No valid message found.', 'error');
                     extractTextWrapper.style.display = 'block';
-                    extractedContent.innerHTML = '⚠️ No message detected.';
-                    extractedContent.className = 'text-body';
+                    extractedContent.textContent = '⚠️ No message detected.';
+                    extractedContent.className = 'content';
                     extractedBadge.textContent = '⚠️';
                 }
             } else {
-                // Scramble only mode
                 extractTextWrapper.style.display = 'block';
                 extractedContent.textContent = '— (Scramble only mode)';
-                extractedContent.className = 'text-body';
+                extractedContent.className = 'content';
                 extractedBadge.textContent = '—';
                 state.extractedText = '';
                 state.extractedTextLength = 0;
                 setStatus('✅ Image unscrambled successfully.', 'success');
             }
 
-            // Show download options
             downloadAreaExtract.style.display = 'flex';
             downloadTextBtn.style.display = 'none';
             downloadImageBtn.style.display = 'none';
@@ -1432,7 +1428,7 @@
         }
 
         // ============================================================
-        // PDF GENERATION – Fixed overlapping: content padded inside borders
+        // PDF GENERATION – Monospace "CIA document" style
         // ============================================================
         async function downloadPdf() {
             if (!state.unscrambledImageData) {
@@ -1456,20 +1452,16 @@
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
-                // ----- MINIMAL MARGINS – border almost touches page edges -----
-                const borderMarginX = pageWidth * 0.05;   // 5% left/right
-                const borderMarginY = pageHeight * 0.03;  // 3% top/bottom
+                const borderMarginX = pageWidth * 0.05;
+                const borderMarginY = pageHeight * 0.03;
                 const borderWidth = pageWidth - 2 * borderMarginX;
                 const borderHeight = pageHeight - 2 * borderMarginY;
-
-                // ----- INNER PADDING (12mm for comfortable spacing) -----
                 const innerPad = 12;
                 const contentX = borderMarginX + innerPad;
                 const contentY = borderMarginY + innerPad;
                 const contentWidth = borderWidth - 2 * innerPad;
                 const contentHeight = borderHeight - 2 * innerPad;
 
-                // ---- Decorative border ----
                 function drawDecorativeBorder() {
                     pdf.setDrawColor(0, 0, 0);
                     pdf.setLineWidth(1.2);
@@ -1482,81 +1474,82 @@
 
                 drawDecorativeBorder();
 
-                // ----- START CONTENT AT THE TOP OF THE INNER AREA -----
                 let currentY = contentY;
 
-                // ---- Title (centered) ----
-                pdf.setFont('Times', 'bold');
-                pdf.setFontSize(20);
+                // ---- Title (Courier Bold, like a typewriter header) ----
+                pdf.setFont('Courier', 'bold');
+                pdf.setFontSize(18);
                 pdf.setTextColor(0, 0, 0);
                 pdf.text(filename, pageWidth / 2, currentY, { align: 'center' });
-                currentY += 10;   // gap after title
+                currentY += 10;
 
-                // ---- Image (centered) ----
+                // ---- Image ----
                 const img = new Image();
                 img.src = imgDataUrl;
                 await new Promise((resolve) => { img.onload = resolve; });
 
                 const maxImgWidth = contentWidth * 0.85;
                 const maxImgHeight = 70;
-                let imgWidth = img.width, imgHeight = img.height;
+                let imgWidth = img.width,
+                    imgHeight = img.height;
                 const imgAspect = imgWidth / imgHeight;
-                if (imgWidth > maxImgWidth) { imgWidth = maxImgWidth; imgHeight = imgWidth / imgAspect; }
-                if (imgHeight > maxImgHeight) { imgHeight = maxImgHeight; imgWidth = imgHeight * imgAspect; }
-                const imgX = contentX + (contentWidth - imgWidth) / 2;   // centered
+                if (imgWidth > maxImgWidth) { imgWidth = maxImgWidth;
+                    imgHeight = imgWidth / imgAspect; }
+                if (imgHeight > maxImgHeight) { imgHeight = maxImgHeight;
+                    imgWidth = imgHeight * imgAspect; }
+                const imgX = contentX + (contentWidth - imgWidth) / 2;
                 pdf.addImage(imgDataUrl, 'PNG', imgX, currentY, imgWidth, imgHeight);
-                currentY += imgHeight + 8;
+                currentY += imgHeight + 10;
 
-                // ---- Text: SINGLE COLUMN, LEFT‑ALIGNED ----
+                // ---- Text (Courier Roman, monospace – CIA document style) ----
                 const paragraphs = text.split('\n\n').filter(p => p.trim().length > 0);
-                pdf.setFont('Times', 'roman');
+                pdf.setFont('Courier', 'roman');
                 pdf.setFontSize(11);
                 pdf.setTextColor(0, 0, 0);
 
                 const colWidth = contentWidth;
                 let colX = contentX;
                 let colY = currentY;
+                const lineHeight = 5.5;
 
                 function addNewPage() {
                     pdf.addPage();
                     drawDecorativeBorder();
-                    // Title centered on new page
-                    pdf.setFont('Times', 'bold');
-                    pdf.setFontSize(20);
+                    // Title on new page
+                    pdf.setFont('Courier', 'bold');
+                    pdf.setFontSize(18);
                     pdf.text(filename, pageWidth / 2, contentY, { align: 'center' });
-                    pdf.setFont('Times', 'roman');
+                    pdf.setFont('Courier', 'roman');
                     pdf.setFontSize(11);
                     colX = contentX;
-                    colY = contentY + 10;   // match title gap
+                    colY = contentY + 10;
                 }
 
                 paragraphs.forEach((para) => {
                     const lines = pdf.splitTextToSize(para.trim(), colWidth);
                     lines.forEach(line => {
-                        // Check if we need a new page
                         if (colY > contentY + contentHeight - 6) {
                             addNewPage();
                         }
-                        // Left‑align text
                         pdf.text(line, colX, colY);
-                        colY += 5.5;
+                        colY += lineHeight;
                     });
-                    // Paragraph spacing
-                    colY += 4;
+                    // Extra spacing between paragraphs (like a typewriter)
+                    colY += 3;
                 });
 
-                // ---- Page numbers ----
+                // ---- Page numbers (Courier italic) ----
                 const totalPages = pdf.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     pdf.setPage(i);
-                    pdf.setFont('Times', 'italic');
+                    pdf.setFont('Courier', 'italic');
                     pdf.setFontSize(9);
-                    pdf.setTextColor(100);
+                    pdf.setTextColor(80);
                     pdf.text(`Page ${i} / ${totalPages}`, pageWidth / 2, borderMarginY + borderHeight + 6, { align: 'center' });
                 }
 
                 pdf.save(filename + '.pdf');
-                setStatus('✅ PDF downloaded – title & image centered, text left‑aligned.', 'success');
+                setStatus('✅ PDF downloaded – monospace typewriter style.', 'success');
             } catch (e) {
                 setStatus('❌ PDF generation failed: ' + e.message, 'error');
             }
