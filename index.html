@@ -8,66 +8,124 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <style>
+        /* ============================================
+               HACKER THEME – GREEN ON BLACK
+               ============================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f4f8;
-            color: #1a202c;
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #00ff00;
             min-height: 100vh;
             padding: 24px;
+            background-image: repeating-linear-gradient(0deg,
+                    rgba(0, 255, 0, 0.03) 0px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    transparent 2px,
+                    transparent 4px);
         }
+
+        /* ---- Scrollbar ---- */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid #003300;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #003300;
+            border: 1px solid #00ff00;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #004400;
+        }
+
         .app {
             max-width: 1100px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 32px;
+            background: #0d0d0d;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.08), inset 0 0 40px rgba(0, 255, 0, 0.02);
+            border-radius: 8px;
             padding: 32px 36px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            position: relative;
         }
+        .app::before {
+            content: "┌──[ PIXEL RESEARCH SUITE ]──┐";
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background: #0d0d0d;
+            padding: 0 12px;
+            color: #00aa00;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
         .nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 4px;
             margin-bottom: 28px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #003300;
             padding-bottom: 12px;
         }
         .nav a {
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            padding: 8px 18px;
-            border-radius: 40px;
+            padding: 6px 14px;
+            border-radius: 4px;
             transition: all 0.2s;
-            color: #4a5568;
+            color: #00aa00;
+            border: 1px solid transparent;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .nav a:hover {
-            background: #edf2f7;
-            color: #2d3748;
+            background: #001a00;
+            color: #00ff00;
+            border-color: #004400;
         }
         .nav a.active {
-            background: #ebf4ff;
-            color: #3b82f6;
+            background: #001a00;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
         }
+
         .header-title {
             text-align: center;
             margin-bottom: 24px;
+            border: 1px solid #003300;
+            padding: 10px 0;
+            background: #080808;
         }
         .header-title h2 {
             font-weight: 700;
-            font-size: 26px;
-            letter-spacing: -0.5px;
-            color: #1a202c;
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: #00ff00;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
         }
         .header-title p {
-            color: #4a5568;
-            margin-top: 6px;
-            font-size: 15px;
+            color: #00aa00;
+            margin-top: 4px;
+            font-size: 13px;
+            letter-spacing: 1px;
         }
+
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -77,62 +135,73 @@
             margin-bottom: 24px;
         }
         .btn {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Courier New', monospace;
             font-weight: 600;
-            font-size: 14px;
-            padding: 10px 24px;
-            border: none;
-            border-radius: 40px;
+            font-size: 13px;
+            padding: 8px 20px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
-            background: #edf2f7;
-            color: #2d3748;
-            border: 1px solid #e2e8f0;
+            background: transparent;
+            color: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .btn:hover:not(:disabled) {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.15);
+            transform: translateY(-2px);
         }
         .btn:disabled {
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
         .btn-primary {
-            background: #3b82f6;
-            border-color: transparent;
-            color: #fff;
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
         }
         .btn-primary:hover:not(:disabled) {
-            background: #2563eb;
+            background: #003300;
+            border-color: #66ff66;
+            color: #66ff66;
         }
         .btn-secondary {
-            background: #e2e8f0;
-            border-color: #cbd5e0;
+            border-color: #004400;
+            color: #00aa00;
         }
         .btn-secondary:hover:not(:disabled) {
-            background: #cbd5e0;
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
         }
         .btn-success {
-            background: #22c55e;
-            border-color: transparent;
-            color: #fff;
+            border-color: #00ff00;
+            color: #00ff00;
+            background: #001a00;
         }
         .btn-success:hover:not(:disabled) {
-            background: #16a34a;
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
         }
         .btn-danger {
-            background: #ef4444;
-            border-color: transparent;
-            color: #fff;
+            border-color: #aa0000;
+            color: #ff3333;
+            background: #1a0000;
         }
         .btn-danger:hover:not(:disabled) {
-            background: #dc2626;
+            background: #330000;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
         }
+
         .file-input {
             display: none;
         }
+
         .grid-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -143,32 +212,43 @@
         .grid-box {
             flex: 1;
             min-width: 200px;
-            background: #f8fafc;
-            border-radius: 20px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
             text-align: center;
         }
         .grid-box h3 {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 12px;
-            color: #2d3748;
+            color: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        .grid-box h3 .hint {
+            font-weight: 400;
+            font-size: 11px;
+            color: #005500;
+            text-transform: none;
         }
         .grid-box .size-info {
             margin-top: 10px;
-            font-size: 14px;
-            color: #4a5568;
-            background: #edf2f7;
+            font-size: 12px;
+            color: #00aa00;
+            background: #001a00;
             padding: 4px 16px;
-            border-radius: 40px;
+            border-radius: 4px;
             display: inline-block;
+            border: 1px solid #003300;
         }
+
         .canvas-wrap {
-            background: #ffffff;
-            border-radius: 16px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
             display: inline-block;
             width: 100%;
         }
@@ -177,11 +257,13 @@
             display: block;
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
+            border-radius: 4px;
             image-rendering: pixelated;
-            background: #ffffff;
+            background: #0a0a0a;
             margin: 0 auto;
+            border: 1px solid #001a00;
         }
+
         .pixel-grid {
             display: grid;
             grid-template-columns: repeat(28, 1fr);
@@ -190,63 +272,69 @@
             aspect-ratio: 1 / 1;
             max-width: 280px;
             margin: 0 auto;
-            border-radius: 10px;
+            border-radius: 4px;
             overflow: hidden;
-            background: #e2e8f0;
-            border: 1px solid #cbd5e0;
+            background: #003300;
+            border: 1px solid #00ff00;
+            cursor: pointer;
         }
         .pixel {
             aspect-ratio: 1;
-            background: #e2e8f0;
-            transition: all 0.15s ease;
+            background: #001a00;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            position: relative;
+            z-index: 0;
+            will-change: transform;
         }
         .pixel:hover {
-            border: 1px solid #3b82f6;
+            transform: scale(1.08);
             z-index: 1;
-            transform: scale(1.05);
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+            outline: 1px solid #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
             border-radius: 2px;
         }
         .grid-center {
             display: flex;
             justify-content: center;
         }
+
         .status {
-            background: #f1f5f9;
-            border-radius: 40px;
+            background: #0a0a0a;
+            border-radius: 4px;
             padding: 12px 20px;
             margin-top: 16px;
-            font-size: 14px;
-            color: #4a5568;
+            font-size: 13px;
+            color: #00aa00;
             text-align: center;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #003300;
             min-height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-family: 'Courier New', monospace;
         }
         .status.success {
-            color: #16a34a;
-            border-color: #bbf7d0;
-            background: #f0fdf4;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.05);
         }
         .status.error {
-            color: #dc2626;
-            border-color: #fecaca;
-            background: #fef2f2;
+            color: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
         }
         .status.loading {
-            color: #2563eb;
-            border-color: #bfdbfe;
-            background: #eff6ff;
+            color: #ffff00;
+            border-color: #aaaa00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.05);
         }
         .spinner {
             display: inline-block;
             width: 18px;
             height: 18px;
-            border: 2px solid #e2e8f0;
-            border-top-color: #3b82f6;
+            border: 2px solid #003300;
+            border-top-color: #00ff00;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -255,6 +343,7 @@
                 transform: rotate(360deg);
             }
         }
+
         .download-area {
             text-align: center;
             margin: 8px 0 4px;
@@ -265,34 +354,108 @@
             justify-content: center;
             gap: 8px;
             margin: 10px 0 6px;
-            font-size: 14px;
-            color: #4a5568;
+            font-size: 12px;
+            color: #00aa00;
+            font-family: 'Courier New', monospace;
+        }
+        .scale-control label {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .scale-control input[type="number"] {
             width: 64px;
-            padding: 6px 8px;
-            border: 1px solid #cbd5e0;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            background: #ffffff;
-            color: #1a202c;
+            padding: 4px 8px;
+            border: 1px solid #003300;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: #0a0a0a;
+            color: #00ff00;
             text-align: center;
+            outline: none;
+            transition: border 0.2s;
         }
         .scale-control input[type="number"]:focus {
-            outline: 2px solid #3b82f6;
-            border-color: transparent;
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
         }
         .scale-control span {
             font-weight: 500;
         }
+
+        /* ---- Tooltip (dark glass) ---- */
+        .tooltip {
+            position: fixed;
+            pointer-events: none;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.1);
+            display: none;
+            z-index: 999;
+            max-width: 360px;
+            min-width: 240px;
+        }
+        .tooltip .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .tooltip .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid #00ff00;
+            flex-shrink: 0;
+        }
+        .tooltip .mini-canvas-wrap {
+            border-radius: 4px;
+            overflow: hidden;
+            background: #0a0a0a;
+            border: 1px solid #003300;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .tooltip .mini-canvas-wrap canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+        .tooltip .formula {
+            color: #ffff00;
+            font-weight: 500;
+        }
+        .tooltip .highlight {
+            color: #66ff66;
+        }
+        .tooltip .dim {
+            color: #005500;
+        }
+
         @media (max-width: 768px) {
             .app {
                 padding: 20px;
             }
+            .app::before {
+                content: "┌──[ P.R.S. ]──┐";
+                font-size: 10px;
+                left: 10px;
+                top: -12px;
+            }
             .grid-box {
                 min-width: 150px;
                 padding: 14px;
+            }
+            .tooltip {
+                max-width: 280px;
+                font-size: 11px;
+                padding: 12px 14px;
             }
         }
         @media (max-width: 480px) {
@@ -311,9 +474,11 @@
         <!-- Navigation -->
         <div class="nav">
             <a href="index.html" class="active">🏠 Home</a>
-            <a href="option1.html">🧪 Option 1 – Detail</a>
-            <a href="option2.html">🔐 Option 2 – Stegano</a>
-            <a href="option3.html">📦 Option 3 – Export</a>
+            <a href="option1.html">🧪 Opt 1</a>
+            <a href="option2.html">🔐 Opt 2</a>
+            <a href="option3.html">📦 Opt 3</a>
+            <a href="option4.html">🚀 Opt 4</a>
+            <a href="option5.html">✏️ Opt 5</a>
         </div>
 
         <div class="header-title">
@@ -332,14 +497,14 @@
         <div id="preview" style="display: none;">
             <div class="grid-wrapper">
                 <div class="grid-box">
-                    <h3>📷 Original <span style="font-weight:400;font-size:13px;color:#64748b;">(square‑cropped)</span></h3>
+                    <h3>📷 Original <span class="hint">(square‑cropped)</span></h3>
                     <div class="canvas-wrap">
                         <img id="original" alt="Original" />
                     </div>
                     <div class="size-info" id="originalSize">—</div>
                 </div>
                 <div class="grid-box">
-                    <h3>🧩 28×28 Grid</h3>
+                    <h3>🧩 28×28 Grid <span class="hint">(hover for details)</span></h3>
                     <div class="canvas-wrap">
                         <div class="grid-center">
                             <div class="pixel-grid" id="grid"></div>
@@ -348,7 +513,6 @@
                     <div class="size-info" id="gridSize">—</div>
 
                     <div class="download-area">
-                        <!-- Scale control -->
                         <div class="scale-control">
                             <label for="scaleInput">Scale:</label>
                             <input type="number" id="scaleInput" value="10" min="1" max="100" step="1" />
@@ -361,6 +525,28 @@
         </div>
 
         <div class="status" id="status">📁 Choose an image or paste from clipboard</div>
+    </div>
+
+    <!-- ===== TOOLTIP ===== -->
+    <div class="tooltip" id="tooltip">
+        <div class="row">
+            <span class="mini-canvas-wrap" id="miniWrap"><canvas id="miniCanvas" width="40" height="40"></canvas></span>
+            <span>
+                <div><strong>Block <span id="blockCoords">(0,0)</span></strong></div>
+                <div style="font-size:10px; color:#005500;">original block pixels</div>
+            </span>
+        </div>
+        <div class="row">
+            <span class="color-swatch" id="swatch"></span>
+            <span>
+                <div><span class="highlight">Obtained color</span> → <span id="avgColor">rgba(0,0,0,255)</span></div>
+            </span>
+        </div>
+        <div style="margin-top:4px; border-top:1px solid #003300; padding-top:4px;">
+            <div><span class="dim">Sum(R,G,B,A) =</span> <span id="sumValues">(0,0,0,0)</span></div>
+            <div><span class="dim">Pixel count (n) =</span> <span id="pixelCount">0</span></div>
+            <div class="formula">⬤ Average = (sumR/n, sumG/n, sumB/n, sumA/n)</div>
+        </div>
     </div>
 
     <script>
@@ -379,9 +565,23 @@
         const originalSizeEl = document.getElementById('originalSize');
         const gridSizeEl = document.getElementById('gridSize');
 
+        // ---- Tooltip refs ----
+        const tooltip = document.getElementById('tooltip');
+        const miniCanvas = document.getElementById('miniCanvas');
+        const blockCoords = document.getElementById('blockCoords');
+        const swatch = document.getElementById('swatch');
+        const avgColor = document.getElementById('avgColor');
+        const sumValues = document.getElementById('sumValues');
+        const pixelCount = document.getElementById('pixelCount');
+
         let state = {
             squareImageData: null,
             pixelData: null,
+            blockData: null,
+            origImageData: null,
+            squareSize: 0,
+            blockW: 0,
+            blockH: 0,
             originalFileSize: 0,
         };
 
@@ -429,6 +629,7 @@
                         const blockW = size / 28;
                         const blockH = size / 28;
                         const pixelData = [];
+                        const blockData = [];
                         for (let row = 0; row < 28; row++) {
                             for (let col = 0; col < 28; col++) {
                                 const xStart = Math.floor(col * blockW);
@@ -450,15 +651,15 @@
                                         count++;
                                     }
                                 }
-                                pixelData.push({
-                                    r: Math.round(sumR / count),
-                                    g: Math.round(sumG / count),
-                                    b: Math.round(sumB / count),
-                                    a: Math.round(sumA / count)
-                                });
+                                const avgR = Math.round(sumR / count);
+                                const avgG = Math.round(sumG / count);
+                                const avgB = Math.round(sumB / count);
+                                const avgA = Math.round(sumA / count);
+                                pixelData.push({ r: avgR, g: avgG, b: avgB, a: avgA });
+                                blockData.push({ sumR, sumG, sumB, sumA, count });
                             }
                         }
-                        resolve({ pixelData });
+                        resolve({ pixelData, blockData, blockW, blockH, size, imageData });
                     } catch (e) { reject(e); }
                 };
                 img.onerror = () => reject(new Error('Failed to load square image.'));
@@ -468,10 +669,14 @@
 
         function renderGrid(container, pixelData) {
             container.innerHTML = '';
-            pixelData.forEach(p => {
+            pixelData.forEach((p, idx) => {
                 const div = document.createElement('div');
                 div.className = 'pixel';
                 div.style.backgroundColor = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+                div.dataset.index = idx;
+                div.addEventListener('mouseover', showTooltip);
+                div.addEventListener('mousemove', moveTooltip);
+                div.addEventListener('mouseout', hideTooltip);
                 container.appendChild(div);
             });
         }
@@ -482,7 +687,6 @@
             return (bytes / 1048576).toFixed(2) + ' MB';
         }
 
-        // ---- Generate a scaled PNG (user-defined scale) ----
         function generateScaledGridPNG(pixelData, scale) {
             const size = 28 * scale;
             const canvas = document.createElement('canvas');
@@ -500,6 +704,58 @@
                 }
             }
             return canvas.toDataURL('image/png');
+        }
+
+        // ---- Tooltip handlers ----
+        function showTooltip(e) {
+            const div = e.currentTarget;
+            const idx = parseInt(div.dataset.index);
+            const row = Math.floor(idx / 28);
+            const col = idx % 28;
+            const p = state.pixelData[idx];
+            const b = state.blockData[idx];
+            if (!p || !b) return;
+
+            blockCoords.textContent = `(${row}, ${col})`;
+            swatch.style.backgroundColor = `rgba(${p.r},${p.g},${p.b},${p.a/255})`;
+            avgColor.textContent = `rgba(${p.r}, ${p.g}, ${p.b}, ${p.a})`;
+            sumValues.textContent = `(${b.sumR}, ${b.sumG}, ${b.sumB}, ${b.sumA})`;
+            pixelCount.textContent = b.count;
+
+            const miniCtx = miniCanvas.getContext('2d');
+            const xStart = Math.floor(col * state.blockW);
+            const xEnd = Math.floor((col + 1) * state.blockW);
+            const yStart = Math.floor(row * state.blockH);
+            const yEnd = Math.floor((row + 1) * state.blockH);
+            const blockW = xEnd - xStart;
+            const blockH = yEnd - yStart;
+
+            const fullCanvas = document.createElement('canvas');
+            fullCanvas.width = state.squareSize;
+            fullCanvas.height = state.squareSize;
+            const fullCtx = fullCanvas.getContext('2d');
+            fullCtx.putImageData(state.origImageData, 0, 0);
+
+            miniCtx.clearRect(0, 0, 40, 40);
+            miniCtx.imageSmoothingEnabled = false;
+            miniCtx.drawImage(fullCanvas, xStart, yStart, blockW, blockH, 0, 0, 40, 40);
+
+            tooltip.style.display = 'block';
+        }
+
+        function moveTooltip(e) {
+            const x = e.clientX + 16;
+            const y = e.clientY + 16;
+            const tw = tooltip.offsetWidth || 300;
+            const th = tooltip.offsetHeight || 200;
+            const maxX = window.innerWidth - tw - 12;
+            const maxY = window.innerHeight - th - 12;
+            tooltip.style.left = Math.min(x, maxX) + 'px';
+            tooltip.style.top = Math.min(y, maxY) + 'px';
+        }
+
+        function hideTooltip() {
+            tooltip.style.display = 'none';
         }
 
         // ---- Load image ----
@@ -527,9 +783,14 @@
             try {
                 const result = await generateGridData(state.squareImageData);
                 state.pixelData = result.pixelData;
+                state.blockData = result.blockData;
+                state.blockW = result.blockW;
+                state.blockH = result.blockH;
+                state.squareSize = result.size;
+                state.origImageData = result.imageData;
+
                 renderGrid(gridContainer, state.pixelData);
 
-                // ---- Generate 28x28 PNG to show its size (raw data) ----
                 const rawCanvas = document.createElement('canvas');
                 rawCanvas.width = 28;
                 rawCanvas.height = 28;
@@ -550,13 +811,13 @@
                 gridSizeEl.textContent = '📏 ' + formatSize(rawSize);
 
                 downloadBtn.disabled = false;
-                setStatus('✅ Grid ready! Choose a scale and download.', 'success');
+                setStatus('✅ Grid ready! Hover for details, or download.', 'success');
             } catch (err) {
                 setStatus('❌ Error: ' + err.message, 'error');
             }
         }
 
-        // ---- Download PNG with user-defined scale ----
+        // ---- Download PNG ----
         function downloadPNG() {
             if (!state.pixelData) return;
             const scale = parseInt(scaleInput.value) || 10;
@@ -576,7 +837,8 @@
 
         // ---- Reset ----
         function reset() {
-            state = { squareImageData: null, pixelData: null, originalFileSize: 0 };
+            state = { squareImageData: null, pixelData: null, blockData: null, origImageData: null, squareSize: 0, blockW: 0,
+                blockH: 0, originalFileSize: 0 };
             originalImg.src = '';
             gridContainer.innerHTML = '';
             preview.style.display = 'none';
@@ -584,6 +846,7 @@
             downloadBtn.disabled = true;
             originalSizeEl.textContent = '—';
             gridSizeEl.textContent = '—';
+            tooltip.style.display = 'none';
             setStatus('🔄 Reset. Load an image.', '');
             fileInput.value = '';
         }

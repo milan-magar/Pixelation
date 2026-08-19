@@ -8,723 +8,1185 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter',sans-serif; background:#f0f4f8; color:#1a202c; min-height:100vh; padding:24px; }
-        .app { max-width:1100px; margin:0 auto; background:#ffffff; border-radius:32px; padding:32px 36px; box-shadow:0 12px 40px rgba(0,0,0,0.06); }
-        .nav { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px; border-bottom:1px solid #e2e8f0; padding-bottom:12px; }
-        .nav a { text-decoration:none; font-weight:600; font-size:14px; padding:8px 18px; border-radius:40px; transition:all 0.2s; color:#4a5568; }
-        .nav a:hover { background:#edf2f7; color:#2d3748; }
-        .nav a.active { background:#ebf4ff; color:#3b82f6; }
+        /* ============================================
+               HACKER THEME – GREEN ON BLACK
+               ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        .header-title { text-align:center; margin-bottom:24px; }
-        .header-title h2 { font-weight:700; font-size:26px; letter-spacing:-0.5px; color:#1a202c; }
-        .header-title p { color:#4a5568; margin-top:6px; font-size:15px; }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            padding: 24px;
+            /* Subtle scanline effect */
+            background-image: repeating-linear-gradient(0deg,
+                    rgba(0, 255, 0, 0.03) 0px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    transparent 2px,
+                    transparent 4px);
+        }
 
-        .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px; }
-        .btn { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; padding:8px 20px; border:none; border-radius:40px; cursor:pointer; transition:all 0.2s; background:#edf2f7; color:#2d3748; border:1px solid #e2e8f0; }
-        .btn:hover:not(:disabled) { background:#e2e8f0; transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.05); }
-        .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
-        .btn-primary { background:#3b82f6; border-color:transparent; color:#fff; }
-        .btn-primary:hover:not(:disabled) { background:#2563eb; }
-        .btn-secondary { background:#e2e8f0; border-color:#cbd5e0; }
-        .btn-secondary:hover:not(:disabled) { background:#cbd5e0; }
-        .btn-success { background:#22c55e; border-color:transparent; color:#fff; }
-        .btn-success:hover:not(:disabled) { background:#16a34a; }
-        .btn-warning { background:#f59e0b; border-color:transparent; color:#fff; }
-        .btn-warning:hover:not(:disabled) { background:#d97706; }
-        .btn-danger { background:#ef4444; border-color:transparent; color:#fff; }
-        .btn-danger:hover:not(:disabled) { background:#dc2626; }
-        .btn-purple { background:#8b5cf6; border-color:transparent; color:#fff; }
-        .btn-purple:hover:not(:disabled) { background:#7c3aed; }
-        .file-input { display:none; }
+        /* ---- Scrollbar ---- */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid #003300;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #003300;
+            border: 1px solid #00ff00;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #004400;
+        }
 
-        .canvas-wrap { background:#ffffff; border-radius:16px; padding:12px; border:1px solid #e2e8f0; display:inline-block; width:100%; text-align:center; }
-        .canvas-wrap img { display:block; max-width:100%; height:auto; border-radius:10px; background:#ffffff; margin:0 auto; max-height:200px; }
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #0d0d0d;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.08), inset 0 0 40px rgba(0, 255, 0, 0.02);
+            border-radius: 8px;
+            padding: 32px 36px;
+            position: relative;
+        }
+        /* Small corner decorations */
+        .app::before {
+            content: "┌──[ PIXEL RESEARCH SUITE ]──┐";
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background: #0d0d0d;
+            padding: 0 12px;
+            color: #00aa00;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
 
-        .preview-row { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin:12px 0; }
-        .preview-col { flex:1; min-width:120px; }
-        .preview-col .label { font-size:13px; color:#4a5568; margin-bottom:4px; }
-        .size-badge { background:#edf2f7; padding:4px 16px; border-radius:40px; font-size:13px; color:#4a5568; display:inline-block; margin-top:6px; }
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #003300;
+            padding-bottom: 12px;
+        }
+        .nav a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            color: #00aa00;
+            border: 1px solid transparent;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav a:hover {
+            background: #001a00;
+            color: #00ff00;
+            border-color: #004400;
+        }
+        .nav a.active {
+            background: #001a00;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
+        }
 
-        .mode-selector { display:flex; flex-wrap:wrap; gap:4px; background:#f1f5f9; border-radius:40px; padding:4px; margin:8px 0 16px; border:1px solid #e2e8f0; }
-        .mode-btn { flex:1; padding:8px 16px; border:none; border-radius:36px; font-family:'Inter',sans-serif; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.2s; background:transparent; color:#4a5568; }
-        .mode-btn:hover { background:rgba(255,255,255,0.5); }
-        .mode-btn.active { background:#ffffff; color:#1a202c; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+        .header-title {
+            text-align: center;
+            margin-bottom: 24px;
+            border: 1px solid #003300;
+            padding: 10px 0;
+            background: #080808;
+        }
+        .header-title h2 {
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: #00ff00;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+        .header-title p {
+            color: #00aa00;
+            margin-top: 4px;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
 
-        .extract-area { margin-top:12px; padding:16px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; }
-        .extract-area .label { font-size:14px; font-weight:600; color:#2d3748; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
-        .extract-area .label .badge { font-size:12px; font-weight:500; background:#ebf4ff; color:#3b82f6; padding:2px 12px; border-radius:40px; }
-        .extract-area .content { font-family:'Inter',monospace; font-size:14px; color:#1a202c; background:#ffffff; padding:12px 16px; border-radius:8px; border:1px solid #e2e8f0; min-height:80px; word-break:break-word; white-space:pre-wrap; line-height:1.7; resize:vertical; width:100%; }
-        .extract-area .content.placeholder { color:#94a3b8; }
-        .extract-area .content:disabled { background:#f1f5f9; cursor:not-allowed; }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .btn {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 8px 20px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover:not(:disabled) {
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-primary {
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #003300;
+            border-color: #66ff66;
+            color: #66ff66;
+        }
+        .btn-secondary {
+            border-color: #004400;
+            color: #00aa00;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #001a00;
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+        .btn-success {
+            border-color: #00ff00;
+            color: #00ff00;
+            background: #001a00;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #003300;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        .btn-warning {
+            border-color: #aaaa00;
+            color: #ffff00;
+            background: #1a1a00;
+        }
+        .btn-warning:hover:not(:disabled) {
+            background: #333300;
+            border-color: #ffff00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.15);
+        }
+        .btn-danger {
+            border-color: #aa0000;
+            color: #ff3333;
+            background: #1a0000;
+        }
+        .btn-danger:hover:not(:disabled) {
+            background: #330000;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
+        }
+        .btn-purple {
+            border-color: #6600aa;
+            color: #cc66ff;
+            background: #11001a;
+        }
+        .btn-purple:hover:not(:disabled) {
+            background: #220033;
+            border-color: #aa44ff;
+            box-shadow: 0 0 20px rgba(170, 68, 255, 0.15);
+        }
 
-        .msg-meta { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-top:6px; gap:8px; }
-        .msg-hint { font-size:12px; color:#94a3b8; }
-        .char-count { font-size:13px; font-weight:500; color:#4a5568; }
-        .char-count.exceeded { color:#ef4444; }
+        .file-input {
+            display: none;
+        }
 
-        .password-group { display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; padding:8px 12px; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0; margin-top:6px; }
-        .password-group label { display:flex; align-items:center; gap:6px; font-size:13px; color:#4a5568; }
-        .password-group input[type="password"] { padding:4px 10px; border:1px solid #cbd5e0; border-radius:6px; font-family:'Inter',sans-serif; font-size:13px; background:#fff; color:#1a202c; width:140px; }
-        .password-group input[type="password"]:focus { outline:2px solid #3b82f6; border-color:transparent; }
+        .canvas-wrap {
+            background: #0a0a0a;
+            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid #003300;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        .canvas-wrap img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background: #0a0a0a;
+            margin: 0 auto;
+            max-height: 200px;
+            border: 1px solid #001a00;
+        }
 
-        .add-content-area { margin-top:10px; display:none; }
-        .add-content-area label { font-size:13px; font-weight:500; color:#2d3748; display:block; margin-bottom:4px; }
+        .preview-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .preview-col {
+            flex: 1;
+            min-width: 120px;
+        }
+        .preview-col .label {
+            font-size: 12px;
+            color: #00aa00;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .size-badge {
+            background: #001a00;
+            padding: 2px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #00aa00;
+            display: inline-block;
+            margin-top: 6px;
+            border: 1px solid #003300;
+        }
 
-        .download-area { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:center; margin:12px 0 6px; padding:12px 16px; background:#f0fdf4; border-radius:12px; border:1px solid #bbf7d0; display:none; }
-        .download-area .label { font-size:14px; font-weight:600; color:#16a34a; margin-right:4px; }
-        .download-area .filename-input { padding:4px 10px; border:1px solid #cbd5e0; border-radius:6px; font-family:'Inter',sans-serif; font-size:13px; background:#fff; color:#1a202c; width:140px; }
-        .download-area .filename-input:focus { outline:2px solid #3b82f6; border-color:transparent; }
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            padding: 4px;
+            margin: 8px 0 16px;
+            border: 1px solid #003300;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #00aa00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .mode-btn:hover {
+            background: #001a00;
+            color: #00ff00;
+            border-color: #004400;
+        }
+        .mode-btn.active {
+            background: #001a00;
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 16px rgba(0, 255, 0, 0.05);
+        }
 
-        .status { background:#f1f5f9; border-radius:40px; padding:12px 20px; margin-top:16px; font-size:14px; color:#4a5568; text-align:center; border:1px solid #e2e8f0; min-height:52px; display:flex; align-items:center; justify-content:center; gap:8px; }
-        .status.success { color:#16a34a; border-color:#bbf7d0; background:#f0fdf4; }
-        .status.error { color:#dc2626; border-color:#fecaca; background:#fef2f2; }
-        .status.loading { color:#2563eb; border-color:#bfdbfe; background:#eff6ff; }
-        .spinner { display:inline-block; width:18px; height:18px; border:2px solid #e2e8f0; border-top-color:#3b82f6; border-radius:50%; animation:spin 0.7s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
+        .extract-area {
+            margin-top: 12px;
+            padding: 16px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            border: 1px solid #003300;
+        }
+        .extract-area .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #00ff00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .extract-area .label .badge {
+            font-size: 11px;
+            font-weight: 400;
+            background: #001a00;
+            color: #00aa00;
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1px solid #003300;
+        }
+        .extract-area .content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff00;
+            background: #0a0a0a;
+            padding: 12px 16px;
+            border-radius: 4px;
+            border: 1px solid #003300;
+            min-height: 80px;
+            word-break: break-word;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            resize: vertical;
+            width: 100%;
+        }
+        .extract-area .content.placeholder {
+            color: #005500;
+        }
+        .extract-area .content:disabled {
+            background: #0a0a0a;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
 
-        @media (max-width:768px) { .app { padding:20px; } }
-        @media (max-width:480px) { .app { padding:12px; } }
+        .msg-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            gap: 8px;
+        }
+        .msg-hint {
+            font-size: 11px;
+            color: #005500;
+            letter-spacing: 0.5px;
+        }
+        .char-count {
+            font-size: 12px;
+            font-weight: 500;
+            color: #00aa00;
+        }
+        .char-count.exceeded {
+            color: #ff3333;
+        }
+
+        .password-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            align-items: center;
+            padding: 8px 12px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            border: 1px solid #003300;
+            margin-top: 6px;
+        }
+        .password-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #00aa00;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .password-group input[type="password"] {
+            padding: 4px 10px;
+            border: 1px solid #003300;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: #0a0a0a;
+            color: #00ff00;
+            width: 140px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .password-group input[type="password"]:focus {
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
+        }
+
+        .add-content-area {
+            margin-top: 10px;
+            display: none;
+        }
+        .add-content-area label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #00aa00;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .download-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            margin: 12px 0 6px;
+            padding: 12px 16px;
+            background: #001a00;
+            border-radius: 4px;
+            border: 1px solid #00ff00;
+            display: none;
+        }
+        .download-area .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00ff00;
+            margin-right: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .download-area .filename-input {
+            padding: 4px 10px;
+            border: 1px solid #003300;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: #0a0a0a;
+            color: #00ff00;
+            width: 140px;
+            outline: none;
+        }
+        .download-area .filename-input:focus {
+            border-color: #00ff00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
+        }
+
+        .status {
+            background: #0a0a0a;
+            border-radius: 4px;
+            padding: 12px 20px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #00aa00;
+            text-align: center;
+            border: 1px solid #003300;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        .status.success {
+            color: #00ff00;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.05);
+        }
+        .status.error {
+            color: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
+        }
+        .status.loading {
+            color: #ffff00;
+            border-color: #aaaa00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.05);
+        }
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #003300;
+            border-top-color: #00ff00;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app {
+                padding: 20px;
+            }
+            .app::before {
+                content: "┌──[ P.R.S. ]──┐";
+                font-size: 10px;
+                left: 10px;
+                top: -12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .app {
+                padding: 12px;
+            }
+            .password-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .password-group label {
+                flex-wrap: wrap;
+            }
+            .password-group input[type="password"] {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <!-- Navigation -->
-    <div class="nav">
-        <a href="index.html">🏠 Home</a>
-        <a href="option1.html">🧪 Option 1 – Detail</a>
-        <a href="option2.html">🔐 Option 2 – Stegano</a>
-        <a href="option3.html">📦 Option 3 – Export</a>
-        <a href="option4.html">🚀 Option 4 – Full‑Res</a>
-        <a href="option5.html" class="active">✏️ Option 5 – Update</a>
-    </div>
+    <div class="app">
+        <!-- Navigation -->
+        <div class="nav">
+            <a href="index.html">🏠 Home</a>
+            <a href="option1.html">🧪 Opt 1</a>
+            <a href="option2.html">🔐 Opt 2</a>
+            <a href="option3.html">📦 Opt 3</a>
+            <a href="option4.html">🚀 Opt 4</a>
+            <a href="option5.html" class="active">✏️ Opt 5</a>
+        </div>
 
-    <div class="header-title">
-        <h2>✏️ Option 5 – Update Steganographic Data</h2>
-        <p>Choose <strong>Add Content</strong> (append new text) or <strong>Update</strong> (edit plaintext). Scramble is preserved.</p>
-    </div>
+        <div class="header-title">
+            <h2>✏️ Option 5 – Update Stegano Data</h2>
+            <p>Add content (append) or update (edit) – scramble is preserved.</p>
+        </div>
 
-    <!-- Upload controls -->
-    <div class="controls">
-        <button class="btn btn-primary" id="uploadBtn">📂 Upload Stego PNG</button>
-        <button class="btn btn-warning" id="extractBtn" disabled>🔍 Load Existing Data</button>
-        <button class="btn btn-success" id="updateBtn" disabled>💾 Apply &amp; Download</button>
-        <button class="btn btn-danger" id="resetBtn">↻ Reset</button>
-        <input type="file" id="fileInput" class="file-input" accept="image/png" />
-    </div>
+        <!-- Upload controls -->
+        <div class="controls">
+            <button class="btn btn-primary" id="uploadBtn">📂 Upload Stego PNG</button>
+            <button class="btn btn-warning" id="extractBtn" disabled>🔍 Load Data</button>
+            <button class="btn btn-success" id="updateBtn" disabled>💾 Apply &amp; Download</button>
+            <button class="btn btn-danger" id="resetBtn">↻ Reset</button>
+            <input type="file" id="fileInput" class="file-input" accept="image/png" />
+        </div>
 
-    <!-- Password fields -->
-    <div class="password-group" id="passwordGroup">
-        <label><span>🔐 Old Decryption Password:</span><input type="password" id="decryptPassword" placeholder="To decrypt existing" /></label>
-        <label><span>🔐 New Encryption Password:</span><input type="password" id="encryptPassword" placeholder="For new encryption" /></label>
-        <label><span>🔀 Scramble Password:</span><input type="password" id="scramblePassword" placeholder="For unscramble/scramble" /></label>
-    </div>
+        <!-- Password fields -->
+        <div class="password-group" id="passwordGroup">
+            <label><span>🔐 Old Decryption PW:</span><input type="password" id="decryptPassword" placeholder="To decrypt existing" /></label>
+            <label><span>🔐 New Encryption PW:</span><input type="password" id="encryptPassword" placeholder="For new encryption" /></label>
+            <label><span>🔀 Scramble PW:</span><input type="password" id="scramblePassword" placeholder="Unscramble / Scramble" /></label>
+        </div>
 
-    <!-- Mode selector -->
-    <div class="mode-selector" id="modeSelector">
-        <button class="mode-btn active" data-mode="add">➕ Add Content</button>
-        <button class="mode-btn" data-mode="update">✏️ Update</button>
-    </div>
+        <!-- Mode selector -->
+        <div class="mode-selector" id="modeSelector">
+            <button class="mode-btn active" data-mode="add">➕ Add Content</button>
+            <button class="mode-btn" data-mode="update">✏️ Update</button>
+        </div>
 
-    <!-- Image preview -->
-    <div id="imagePreview" style="display:none;">
-        <div class="preview-row">
-            <div class="preview-col">
-                <div class="label">📷 Uploaded Image</div>
-                <div class="canvas-wrap"><img id="uploadedImage" alt="Uploaded" /></div>
-                <div class="size-badge" id="imageSize">—</div>
+        <!-- Image preview -->
+        <div id="imagePreview" style="display:none;">
+            <div class="preview-row">
+                <div class="preview-col">
+                    <div class="label">📷 Uploaded Image</div>
+                    <div class="canvas-wrap"><img id="uploadedImage" alt="Uploaded" /></div>
+                    <div class="size-badge" id="imageSize">—</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Content area -->
-    <div class="extract-area" id="extractArea">
-        <div class="label">
-            <span id="contentLabel">📝 Message</span>
-            <span class="badge" id="messageBadge">—</span>
-        </div>
-        <textarea id="messageContent" class="content placeholder" rows="6" placeholder="Content will appear here in Update mode." disabled></textarea>
-        <div class="add-content-area" id="addContentArea">
-            <label>✏️ New text to append (will be combined and re‑encrypted):</label>
-            <textarea id="newContentToAdd" class="content" rows="4" placeholder="Type new content to append..."></textarea>
+        <!-- Content area -->
+        <div class="extract-area" id="extractArea">
+            <div class="label">
+                <span id="contentLabel">📝 Message</span>
+                <span class="badge" id="messageBadge">—</span>
+            </div>
+            <textarea id="messageContent" class="content placeholder" rows="6" placeholder="Content will appear here in Update mode." disabled></textarea>
+            <div class="add-content-area" id="addContentArea">
+                <label>✏️ New text to append (will be combined and re‑encrypted):</label>
+                <textarea id="newContentToAdd" class="content" rows="4" placeholder="Type new content to append..."></textarea>
+                <div class="msg-meta">
+                    <span class="msg-hint">The old content will be decrypted, combined with this new text, and re‑encrypted.</span>
+                </div>
+            </div>
             <div class="msg-meta">
-                <span class="msg-hint">The old content will be decrypted, combined with this new text, and re‑encrypted.</span>
+                <span class="msg-hint" id="capacityLabel">Max capacity: —</span>
+                <span id="charCount" class="char-count">0 / 0</span>
             </div>
         </div>
-        <div class="msg-meta">
-            <span class="msg-hint" id="capacityLabel">Max capacity: —</span>
-            <span id="charCount" class="char-count">0 / 0</span>
+
+        <!-- Download area -->
+        <div class="download-area" id="downloadArea" style="display:none;">
+            <span class="label">📥 Download updated PNG:</span>
+            <span style="font-size:12px; color:#00aa00;">Filename:</span>
+            <input type="text" id="downloadFilename" class="filename-input" value="updated_stego" />
+            <button class="btn btn-success" id="downloadBtn">⬇ Download PNG</button>
         </div>
+
+        <!-- Status -->
+        <div class="status" id="status">📁 Upload a stego PNG to begin.</div>
     </div>
 
-    <!-- Download area -->
-    <div class="download-area" id="downloadArea" style="display:none;">
-        <span class="label">📥 Download updated PNG:</span>
-        <span style="font-size:13px; color:#4a5568;">Filename:</span>
-        <input type="text" id="downloadFilename" class="filename-input" value="updated_stego" />
-        <button class="btn btn-success" id="downloadBtn">⬇ Download PNG</button>
-    </div>
+    <script>
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const extractBtn = document.getElementById('extractBtn');
+        const updateBtn = document.getElementById('updateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const uploadedImage = document.getElementById('uploadedImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const imageSize = document.getElementById('imageSize');
+        const status = document.getElementById('status');
+        const messageContent = document.getElementById('messageContent');
+        const messageBadge = document.getElementById('messageBadge');
+        const charCount = document.getElementById('charCount');
+        const capacityLabel = document.getElementById('capacityLabel');
+        const decryptPassword = document.getElementById('decryptPassword');
+        const encryptPassword = document.getElementById('encryptPassword');
+        const scramblePassword = document.getElementById('scramblePassword');
+        const downloadFilename = document.getElementById('downloadFilename');
+        const downloadArea = document.getElementById('downloadArea');
+        const contentLabel = document.getElementById('contentLabel');
+        const addContentArea = document.getElementById('addContentArea');
+        const newContentToAdd = document.getElementById('newContentToAdd');
+        const modeBtns = document.querySelectorAll('.mode-btn');
 
-    <!-- Status -->
-    <div class="status" id="status">📁 Upload a stego PNG to begin.</div>
-</div>
-
-<script>
-// ============================================================
-// DOM REFS
-// ============================================================
-const fileInput = document.getElementById('fileInput');
-const uploadBtn = document.getElementById('uploadBtn');
-const extractBtn = document.getElementById('extractBtn');
-const updateBtn = document.getElementById('updateBtn');
-const resetBtn = document.getElementById('resetBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const uploadedImage = document.getElementById('uploadedImage');
-const imagePreview = document.getElementById('imagePreview');
-const imageSize = document.getElementById('imageSize');
-const status = document.getElementById('status');
-const messageContent = document.getElementById('messageContent');
-const messageBadge = document.getElementById('messageBadge');
-const charCount = document.getElementById('charCount');
-const capacityLabel = document.getElementById('capacityLabel');
-const decryptPassword = document.getElementById('decryptPassword');
-const encryptPassword = document.getElementById('encryptPassword');
-const scramblePassword = document.getElementById('scramblePassword');
-const downloadFilename = document.getElementById('downloadFilename');
-const downloadArea = document.getElementById('downloadArea');
-const contentLabel = document.getElementById('contentLabel');
-const addContentArea = document.getElementById('addContentArea');
-const newContentToAdd = document.getElementById('newContentToAdd');
-const modeBtns = document.querySelectorAll('.mode-btn');
-
-// ============================================================
-// STATE
-// ============================================================
-let state = {
-    stegoImageData: null,          // original loaded image data (could be scrambled)
-    baseImageData: null,           // unscrambled base (used for embedding updates)
-    imageWidth: 0,
-    imageHeight: 0,
-    originalFileSize: 0,
-    extractedBytes: null,
-    decryptedText: '',
-    capacityBytes: 0,
-    updatedImageData: null,
-    mode: 'add',
-    dataLoaded: false,
-    isScrambled: false,
-    scrambleSeed: '',
-};
-
-// ============================================================
-// HELPERS
-// ============================================================
-function setStatus(msg, type = '') {
-    status.innerHTML = msg;
-    status.className = 'status' + (type ? ' ' + type : '');
-}
-
-function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / 1048576).toFixed(2) + ' MB';
-}
-
-function getImageData(img) {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    const imageData = ctx.getImageData(0, 0, img.width, img.height);
-    return { imageData, canvas, ctx };
-}
-
-function canvasFromImageData(imageData) {
-    const canvas = document.createElement('canvas');
-    canvas.width = imageData.width;
-    canvas.height = imageData.height;
-    const ctx = canvas.getContext('2d');
-    ctx.putImageData(imageData, 0, 0);
-    return canvas;
-}
-
-function cloneImageData(imageData) {
-    return new ImageData(
-        new Uint8ClampedArray(imageData.data),
-        imageData.width,
-        imageData.height
-    );
-}
-
-// ============================================================
-// CRYPTOGRAPHY (AES-GCM) – identical to Option 4
-// ============================================================
-async function encryptMessage(message, password) {
-    if (!password) return new TextEncoder().encode(message);
-    const encoder = new TextEncoder();
-    const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-    const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'), iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(message));
-    const combined = new Uint8Array(iv.length + encrypted.byteLength);
-    combined.set(iv, 0);
-    combined.set(new Uint8Array(encrypted), iv.length);
-    return combined;
-}
-
-async function decryptMessage(combinedData, password) {
-    if (!password) return new TextDecoder().decode(combinedData);
-    const encoder = new TextEncoder();
-    const iv = combinedData.slice(0, 12);
-    const data = combinedData.slice(12);
-    const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-    const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'), iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, data);
-    return new TextDecoder().decode(decrypted);
-}
-
-// ============================================================
-// SCRAMBLING ENGINE – identical to Option 4
-// ============================================================
-function seededRandom(seed) {
-    let s = seed >>> 0;
-    return function() {
-        s |= 0;
-        s = s + 0x6D2B79F5 | 0;
-        let t = Math.imul(s ^ s >>> 15, 1 | s);
-        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-}
-
-function hashString(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return Math.abs(hash);
-}
-
-function scramblePixels(imageData, password) {
-    const data = imageData.data;
-    const totalPixels = imageData.width * imageData.height;
-    const seed = hashString(password);
-    const rand = seededRandom(seed);
-    const indices = [];
-    for (let i = 0; i < totalPixels; i++) indices.push(i);
-    for (let i = indices.length - 1; i > 0; i--) {
-        const j = Math.floor(rand() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    const newData = new Uint8ClampedArray(data.length);
-    for (let i = 0; i < totalPixels; i++) {
-        const srcIdx = indices[i] * 4;
-        const dstIdx = i * 4;
-        newData[dstIdx] = data[srcIdx];
-        newData[dstIdx + 1] = data[srcIdx + 1];
-        newData[dstIdx + 2] = data[srcIdx + 2];
-        newData[dstIdx + 3] = data[srcIdx + 3];
-    }
-    const inverse = new Array(totalPixels);
-    for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
-    return { imageData: new ImageData(newData, imageData.width, imageData.height), inverse: inverse };
-}
-
-function unscramblePixels(imageData, password, inversePermutation) {
-    const data = imageData.data;
-    const totalPixels = imageData.width * imageData.height;
-    let inverse = inversePermutation;
-    if (!inverse) {
-        const seed = hashString(password);
-        const rand = seededRandom(seed);
-        const indices = [];
-        for (let i = 0; i < totalPixels; i++) indices.push(i);
-        for (let i = indices.length - 1; i > 0; i--) {
-            const j = Math.floor(rand() * (i + 1));
-            [indices[i], indices[j]] = [indices[j], indices[i]];
-        }
-        inverse = new Array(totalPixels);
-        for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
-    }
-    const newData = new Uint8ClampedArray(data.length);
-    for (let i = 0; i < totalPixels; i++) {
-        const srcIdx = inverse[i] * 4;
-        const dstIdx = i * 4;
-        newData[dstIdx] = data[srcIdx];
-        newData[dstIdx + 1] = data[srcIdx + 1];
-        newData[dstIdx + 2] = data[srcIdx + 2];
-        newData[dstIdx + 3] = data[srcIdx + 3];
-    }
-    return new ImageData(newData, imageData.width, imageData.height);
-}
-
-// ============================================================
-// LSB EXTRACTION / EMBEDDING – identical to Option 4
-// ============================================================
-function extractRawFromImageData(imageData) {
-    const channels = [];
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        channels.push(imageData.data[i]);
-        channels.push(imageData.data[i+1]);
-        channels.push(imageData.data[i+2]);
-    }
-    let bits = [];
-    for (let i = 0; i < 16; i++) bits.push(channels[i] & 1);
-    let len = 0;
-    for (let i = 0; i < 16; i++) len = (len << 1) | bits[i];
-    if (len === 0 || len > 1000000) {
-        return { bytes: new Uint8Array(0), length: 0 };
-    }
-    const totalBits = 16 + len * 8;
-    if (totalBits > channels.length) {
-        return { bytes: new Uint8Array(0), length: 0, error: 'truncated' };
-    }
-    const extractedBytes = new Uint8Array(len);
-    for (let byteIdx = 0; byteIdx < len; byteIdx++) {
-        let byteVal = 0;
-        for (let bitPos = 0; bitPos < 8; bitPos++) {
-            const bitIdx = 16 + byteIdx * 8 + bitPos;
-            byteVal = (byteVal << 1) | (channels[bitIdx] & 1);
-        }
-        extractedBytes[byteIdx] = byteVal;
-    }
-    return { bytes: extractedBytes, length: len };
-}
-
-function embedMessageIntoImageData(imageData, messageBytes) {
-    const channels = [];
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        channels.push(imageData.data[i]);
-        channels.push(imageData.data[i+1]);
-        channels.push(imageData.data[i+2]);
-    }
-    const totalBits = messageBytes.length * 8;
-    if (totalBits > channels.length) {
-        throw new Error('Message too long for this image.');
-    }
-    for (let i = 0; i < totalBits; i++) {
-        const bit = (messageBytes[Math.floor(i / 8)] >> (7 - (i % 8))) & 1;
-        channels[i] = (channels[i] & 0xFE) | bit;
-    }
-    let idx = 0;
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        imageData.data[i] = channels[idx++];
-        imageData.data[i+1] = channels[idx++];
-        imageData.data[i+2] = channels[idx++];
-    }
-    return imageData;
-}
-
-// ============================================================
-// MODE SWITCHING
-// ============================================================
-function switchMode(mode) {
-    state.mode = mode;
-    modeBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-
-    if (mode === 'add') {
-        contentLabel.textContent = '➕ Add Content (existing hidden)';
-        messageContent.disabled = true;
-        messageContent.classList.add('placeholder');
-        messageContent.value = 'Existing content is hidden. Type new text below to append.';
-        addContentArea.style.display = 'block';
-        if (state.dataLoaded) {
-            messageBadge.textContent = `Existing: ${state.decryptedText.length} characters`;
-        } else {
-            messageBadge.textContent = 'Load data first';
-        }
-        newContentToAdd.value = '';
-    } else {
-        contentLabel.textContent = '✏️ Update (plaintext)';
-        messageContent.disabled = false;
-        messageContent.classList.remove('placeholder');
-        addContentArea.style.display = 'none';
-        if (state.dataLoaded && state.decryptedText !== undefined) {
-            messageContent.value = state.decryptedText;
-            messageBadge.textContent = `${state.decryptedText.length} characters`;
-        } else {
-            messageContent.value = '';
-            messageBadge.textContent = '—';
-        }
-    }
-    updateCharCount();
-}
-
-function updateCharCount() {
-    let len = 0;
-    if (state.mode === 'add') {
-        len = newContentToAdd.value.length;
-    } else {
-        len = messageContent.value.length;
-    }
-    charCount.textContent = `${len} / ${state.capacityBytes}`;
-    if (len > state.capacityBytes) charCount.classList.add('exceeded');
-    else charCount.classList.remove('exceeded');
-}
-
-newContentToAdd.addEventListener('input', updateCharCount);
-messageContent.addEventListener('input', updateCharCount);
-
-// ============================================================
-// MAIN FUNCTIONS
-// ============================================================
-function loadImage(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const dataURL = e.target.result;
-        const img = new Image();
-        img.onload = function() {
-            state.imageWidth = img.width;
-            state.imageHeight = img.height;
-            const { imageData } = getImageData(img);
-            state.stegoImageData = imageData;
-            state.baseImageData = null;  // will be set after unscrambling
-            state.originalFileSize = file.size;
-            uploadedImage.src = dataURL;
-            imagePreview.style.display = 'flex';
-            imageSize.textContent = '📏 ' + formatSize(file.size);
-            const totalPixels = img.width * img.height;
-            const capacityBits = totalPixels * 3;
-            state.capacityBytes = Math.floor(capacityBits / 8) - 2;
-            capacityLabel.textContent = `Max capacity: ${formatSize(state.capacityBytes)} (${state.capacityBytes} chars)`;
-            charCount.textContent = `0 / ${state.capacityBytes}`;
-            extractBtn.disabled = false;
-            updateBtn.disabled = true;
-            downloadArea.style.display = 'none';
-            state.extractedBytes = null;
-            state.decryptedText = '';
-            state.dataLoaded = false;
-            state.isScrambled = false;
-            switchMode(state.mode);
-            setStatus('✅ Image loaded. Enter passwords and click "Load Existing Data".', 'success');
+        // ============================================================
+        // STATE
+        // ============================================================
+        let state = {
+            stegoImageData: null, // original loaded image data (could be scrambled)
+            baseImageData: null, // unscrambled base (used for embedding updates)
+            imageWidth: 0,
+            imageHeight: 0,
+            originalFileSize: 0,
+            extractedBytes: null,
+            decryptedText: '',
+            capacityBytes: 0,
+            updatedImageData: null,
+            mode: 'add',
+            dataLoaded: false,
+            isScrambled: false,
+            scrambleSeed: '',
         };
-        img.src = dataURL;
-    };
-    reader.readAsDataURL(file);
-}
 
-async function extractAndLoad() {
-    if (!state.stegoImageData) {
-        setStatus('❌ No image loaded.', 'error');
-        return;
-    }
-
-    const scramPW = scramblePassword.value;
-    let workingData = state.stegoImageData;
-    let baseData = state.stegoImageData;
-    state.isScrambled = false;
-
-    // ---- Unscramble if password provided ----
-    if (scramPW) {
-        try {
-            const unscrambled = unscramblePixels(state.stegoImageData, scramPW);
-            workingData = unscrambled;
-            baseData = unscrambled;
-            state.isScrambled = true;
-            state.scrambleSeed = scramPW;
-            // Store the unscrambled base for saving
-            state.baseImageData = cloneImageData(unscrambled);
-        } catch(e) {
-            setStatus('❌ Unscrambling failed. Wrong password?', 'error');
-            return;
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function setStatus(msg, type = '') {
+            status.innerHTML = msg;
+            status.className = 'status' + (type ? ' ' + type : '');
         }
-    } else {
-        // No scramble password – use original data as base
-        state.baseImageData = cloneImageData(state.stegoImageData);
-        state.isScrambled = false;
-    }
 
-    // ---- Extract message from workingData ----
-    const result = extractRawFromImageData(workingData);
-    if (result.error) {
-        setStatus('❌ Message appears truncated.', 'error');
-        return;
-    }
-    state.extractedBytes = result.bytes;
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(2) + ' MB';
+        }
 
-    const oldPassword = decryptPassword.value;
-    let plaintext = '';
-    if (result.bytes.length > 0) {
-        if (oldPassword) {
-            try {
-                plaintext = await decryptMessage(result.bytes, oldPassword);
-            } catch(e) {
-                setStatus('❌ Decryption failed. Wrong password.', 'error');
-                return;
+        function getImageData(img) {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
+            return { imageData, canvas, ctx };
+        }
+
+        function canvasFromImageData(imageData) {
+            const canvas = document.createElement('canvas');
+            canvas.width = imageData.width;
+            canvas.height = imageData.height;
+            const ctx = canvas.getContext('2d');
+            ctx.putImageData(imageData, 0, 0);
+            return canvas;
+        }
+
+        function cloneImageData(imageData) {
+            return new ImageData(
+                new Uint8ClampedArray(imageData.data),
+                imageData.width,
+                imageData.height
+            );
+        }
+
+        // ============================================================
+        // CRYPTOGRAPHY (AES-GCM) – identical to Option 4
+        // ============================================================
+        async function encryptMessage(message, password) {
+            if (!password) return new TextEncoder().encode(message);
+            const encoder = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'),
+                iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(message));
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(encrypted), iv.length);
+            return combined;
+        }
+
+        async function decryptMessage(combinedData, password) {
+            if (!password) return new TextDecoder().decode(combinedData);
+            const encoder = new TextEncoder();
+            const iv = combinedData.slice(0, 12);
+            const data = combinedData.slice(12);
+            const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: encoder.encode('stegano-salt'),
+                iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, data);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ============================================================
+        // SCRAMBLING ENGINE – identical to Option 4
+        // ============================================================
+        function seededRandom(seed) {
+            let s = seed >>> 0;
+            return function() {
+                s |= 0;
+                s = s + 0x6D2B79F5 | 0;
+                let t = Math.imul(s ^ s >>> 15, 1 | s);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
             }
-        } else {
-            try {
-                plaintext = new TextDecoder().decode(result.bytes);
-            } catch(e) {
-                setStatus('❌ Failed to decode as plaintext. Try providing a decryption password.', 'error');
-                return;
+            return Math.abs(hash);
+        }
+
+        function scramblePixels(imageData, password) {
+            const data = imageData.data;
+            const totalPixels = imageData.width * imageData.height;
+            const seed = hashString(password);
+            const rand = seededRandom(seed);
+            const indices = [];
+            for (let i = 0; i < totalPixels; i++) indices.push(i);
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(rand() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
             }
+            const newData = new Uint8ClampedArray(data.length);
+            for (let i = 0; i < totalPixels; i++) {
+                const srcIdx = indices[i] * 4;
+                const dstIdx = i * 4;
+                newData[dstIdx] = data[srcIdx];
+                newData[dstIdx + 1] = data[srcIdx + 1];
+                newData[dstIdx + 2] = data[srcIdx + 2];
+                newData[dstIdx + 3] = data[srcIdx + 3];
+            }
+            const inverse = new Array(totalPixels);
+            for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
+            return { imageData: new ImageData(newData, imageData.width, imageData.height), inverse: inverse };
         }
-    } else {
-        plaintext = '';
-    }
 
-    state.decryptedText = plaintext;
-    state.dataLoaded = true;
-
-    // ---- Update UI ----
-    if (state.mode === 'update') {
-        messageContent.value = plaintext;
-        messageBadge.textContent = `${plaintext.length} characters`;
-        setStatus('✅ Data loaded. Edit the plaintext, then click "Apply & Download".', 'success');
-    } else {
-        messageBadge.textContent = `Existing: ${plaintext.length} characters`;
-        setStatus('✅ Existing data loaded. Type new content below and click "Apply & Download".', 'success');
-        newContentToAdd.value = '';
-    }
-    updateCharCount();
-    updateBtn.disabled = false;
-}
-
-async function applyAndDownload() {
-    const mode = state.mode;
-    const encryptPW = encryptPassword.value;
-    const scramPW = scramblePassword.value;
-
-    // ---- Start from the BASE image data (unscrambled version) ----
-    if (!state.baseImageData) {
-        setStatus('❌ No base image data. Load the image first.', 'error');
-        return;
-    }
-
-    let imgData = cloneImageData(state.baseImageData);
-
-    // ---- Prepare the final plaintext ----
-    let finalPlaintext;
-    if (mode === 'add') {
-        const oldText = state.decryptedText || '';
-        const newText = newContentToAdd.value || '';
-        finalPlaintext = oldText + newText;
-    } else {
-        finalPlaintext = messageContent.value;
-    }
-
-    if (finalPlaintext.length > state.capacityBytes) {
-        setStatus(`❌ Message exceeds capacity (${state.capacityBytes} chars).`, 'error');
-        return;
-    }
-
-    // ---- Encrypt ----
-    let messageBytes;
-    try {
-        messageBytes = await encryptMessage(finalPlaintext, encryptPW);
-    } catch(e) {
-        setStatus('❌ Encryption failed: ' + e.message, 'error');
-        return;
-    }
-
-    const finalData = new Uint8Array(2 + messageBytes.length);
-    finalData[0] = (messageBytes.length >> 8) & 0xFF;
-    finalData[1] = messageBytes.length & 0xFF;
-    finalData.set(messageBytes, 2);
-
-    // ---- Embed into the BASE (unscrambled) image ----
-    try {
-        imgData = embedMessageIntoImageData(imgData, finalData);
-    } catch(e) {
-        setStatus('❌ Embedding failed: ' + e.message, 'error');
-        return;
-    }
-
-    // ---- Scramble ONCE (if password provided) ----
-    if (scramPW) {
-        try {
-            const result = scramblePixels(imgData, scramPW);
-            imgData = result.imageData;
-        } catch(e) {
-            setStatus('❌ Scrambling failed: ' + e.message, 'error');
-            return;
+        function unscramblePixels(imageData, password, inversePermutation) {
+            const data = imageData.data;
+            const totalPixels = imageData.width * imageData.height;
+            let inverse = inversePermutation;
+            if (!inverse) {
+                const seed = hashString(password);
+                const rand = seededRandom(seed);
+                const indices = [];
+                for (let i = 0; i < totalPixels; i++) indices.push(i);
+                for (let i = indices.length - 1; i > 0; i--) {
+                    const j = Math.floor(rand() * (i + 1));
+                    [indices[i], indices[j]] = [indices[j], indices[i]];
+                }
+                inverse = new Array(totalPixels);
+                for (let i = 0; i < totalPixels; i++) inverse[indices[i]] = i;
+            }
+            const newData = new Uint8ClampedArray(data.length);
+            for (let i = 0; i < totalPixels; i++) {
+                const srcIdx = inverse[i] * 4;
+                const dstIdx = i * 4;
+                newData[dstIdx] = data[srcIdx];
+                newData[dstIdx + 1] = data[srcIdx + 1];
+                newData[dstIdx + 2] = data[srcIdx + 2];
+                newData[dstIdx + 3] = data[srcIdx + 3];
+            }
+            return new ImageData(newData, imageData.width, imageData.height);
         }
-    }
 
-    state.updatedImageData = imgData;
-    downloadArea.style.display = 'flex';
-    setStatus('✅ Update complete. Download the PNG.', 'success');
-}
+        // ============================================================
+        // LSB EXTRACTION / EMBEDDING – identical to Option 4
+        // ============================================================
+        function extractRawFromImageData(imageData) {
+            const channels = [];
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                channels.push(imageData.data[i]);
+                channels.push(imageData.data[i + 1]);
+                channels.push(imageData.data[i + 2]);
+            }
+            let bits = [];
+            for (let i = 0; i < 16; i++) bits.push(channels[i] & 1);
+            let len = 0;
+            for (let i = 0; i < 16; i++) len = (len << 1) | bits[i];
+            if (len === 0 || len > 1000000) {
+                return { bytes: new Uint8Array(0), length: 0 };
+            }
+            const totalBits = 16 + len * 8;
+            if (totalBits > channels.length) {
+                return { bytes: new Uint8Array(0), length: 0, error: 'truncated' };
+            }
+            const extractedBytes = new Uint8Array(len);
+            for (let byteIdx = 0; byteIdx < len; byteIdx++) {
+                let byteVal = 0;
+                for (let bitPos = 0; bitPos < 8; bitPos++) {
+                    const bitIdx = 16 + byteIdx * 8 + bitPos;
+                    byteVal = (byteVal << 1) | (channels[bitIdx] & 1);
+                }
+                extractedBytes[byteIdx] = byteVal;
+            }
+            return { bytes: extractedBytes, length: len };
+        }
 
-function downloadUpdated() {
-    if (!state.updatedImageData) {
-        setStatus('❌ No updated image to download.', 'error');
-        return;
-    }
-    const canvas = canvasFromImageData(state.updatedImageData);
-    const link = document.createElement('a');
-    link.download = downloadFilename.value + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    setStatus('✅ PNG downloaded.', 'success');
-}
+        function embedMessageIntoImageData(imageData, messageBytes) {
+            const channels = [];
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                channels.push(imageData.data[i]);
+                channels.push(imageData.data[i + 1]);
+                channels.push(imageData.data[i + 2]);
+            }
+            const totalBits = messageBytes.length * 8;
+            if (totalBits > channels.length) {
+                throw new Error('Message too long for this image.');
+            }
+            for (let i = 0; i < totalBits; i++) {
+                const bit = (messageBytes[Math.floor(i / 8)] >> (7 - (i % 8))) & 1;
+                channels[i] = (channels[i] & 0xFE) | bit;
+            }
+            let idx = 0;
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                imageData.data[i] = channels[idx++];
+                imageData.data[i + 1] = channels[idx++];
+                imageData.data[i + 2] = channels[idx++];
+            }
+            return imageData;
+        }
 
-function resetAll() {
-    state = { stegoImageData: null, baseImageData: null, imageWidth: 0, imageHeight: 0, originalFileSize: 0, extractedBytes: null, decryptedText: '', capacityBytes: 0, updatedImageData: null, mode: 'add', dataLoaded: false, isScrambled: false, scrambleSeed: '' };
-    uploadedImage.src = '';
-    imagePreview.style.display = 'none';
-    messageContent.value = '';
-    newContentToAdd.value = '';
-    messageBadge.textContent = '—';
-    charCount.textContent = '0 / 0';
-    capacityLabel.textContent = 'Max capacity: —';
-    extractBtn.disabled = true;
-    updateBtn.disabled = true;
-    downloadArea.style.display = 'none';
-    decryptPassword.value = '';
-    encryptPassword.value = '';
-    scramblePassword.value = '';
-    setStatus('🔄 Reset. Upload a stego PNG.', '');
-    fileInput.value = '';
-    modeBtns.forEach(b => b.classList.remove('active'));
-    document.querySelector('.mode-btn[data-mode="add"]').classList.add('active');
-    switchMode('add');
-}
+        // ============================================================
+        // MODE SWITCHING
+        // ============================================================
+        function switchMode(mode) {
+            state.mode = mode;
+            modeBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
 
-// ============================================================
-// EVENT LISTENERS
-// ============================================================
-uploadBtn.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) loadImage(file);
-    fileInput.value = '';
-});
-
-extractBtn.addEventListener('click', extractAndLoad);
-updateBtn.addEventListener('click', applyAndDownload);
-downloadBtn.addEventListener('click', downloadUpdated);
-resetBtn.addEventListener('click', resetAll);
-
-modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (btn.dataset.mode !== state.mode) {
-            switchMode(btn.dataset.mode);
-            if (state.dataLoaded) {
-                if (state.mode === 'add') {
+            if (mode === 'add') {
+                contentLabel.textContent = '➕ Add Content (existing hidden)';
+                messageContent.disabled = true;
+                messageContent.classList.add('placeholder');
+                messageContent.value = 'Existing content is hidden. Type new text below to append.';
+                addContentArea.style.display = 'block';
+                if (state.dataLoaded) {
                     messageBadge.textContent = `Existing: ${state.decryptedText.length} characters`;
-                    messageContent.value = 'Existing content is hidden. Type new text below to append.';
-                    newContentToAdd.value = '';
                 } else {
+                    messageBadge.textContent = 'Load data first';
+                }
+                newContentToAdd.value = '';
+            } else {
+                contentLabel.textContent = '✏️ Update (plaintext)';
+                messageContent.disabled = false;
+                messageContent.classList.remove('placeholder');
+                addContentArea.style.display = 'none';
+                if (state.dataLoaded && state.decryptedText !== undefined) {
                     messageContent.value = state.decryptedText;
                     messageBadge.textContent = `${state.decryptedText.length} characters`;
+                } else {
+                    messageContent.value = '';
+                    messageBadge.textContent = '—';
                 }
             }
             updateCharCount();
         }
-    });
-});
 
-// ============================================================
-// INIT
-// ============================================================
-switchMode('add');
-setStatus('📁 Upload a stego PNG to begin.');
-</script>
+        function updateCharCount() {
+            let len = 0;
+            if (state.mode === 'add') {
+                len = newContentToAdd.value.length;
+            } else {
+                len = messageContent.value.length;
+            }
+            charCount.textContent = `${len} / ${state.capacityBytes}`;
+            if (len > state.capacityBytes) charCount.classList.add('exceeded');
+            else charCount.classList.remove('exceeded');
+        }
+
+        newContentToAdd.addEventListener('input', updateCharCount);
+        messageContent.addEventListener('input', updateCharCount);
+
+        // ============================================================
+        // MAIN FUNCTIONS
+        // ============================================================
+        function loadImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataURL = e.target.result;
+                const img = new Image();
+                img.onload = function() {
+                    state.imageWidth = img.width;
+                    state.imageHeight = img.height;
+                    const { imageData } = getImageData(img);
+                    state.stegoImageData = imageData;
+                    state.baseImageData = null; // will be set after unscrambling
+                    state.originalFileSize = file.size;
+                    uploadedImage.src = dataURL;
+                    imagePreview.style.display = 'flex';
+                    imageSize.textContent = '📏 ' + formatSize(file.size);
+                    const totalPixels = img.width * img.height;
+                    const capacityBits = totalPixels * 3;
+                    state.capacityBytes = Math.floor(capacityBits / 8) - 2;
+                    capacityLabel.textContent =
+                        `Max capacity: ${formatSize(state.capacityBytes)} (${state.capacityBytes} chars)`;
+                    charCount.textContent = `0 / ${state.capacityBytes}`;
+                    extractBtn.disabled = false;
+                    updateBtn.disabled = true;
+                    downloadArea.style.display = 'none';
+                    state.extractedBytes = null;
+                    state.decryptedText = '';
+                    state.dataLoaded = false;
+                    state.isScrambled = false;
+                    switchMode(state.mode);
+                    setStatus('✅ Image loaded. Enter passwords and click "Load Existing Data".', 'success');
+                };
+                img.src = dataURL;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function extractAndLoad() {
+            if (!state.stegoImageData) {
+                setStatus('❌ No image loaded.', 'error');
+                return;
+            }
+
+            const scramPW = scramblePassword.value;
+            let workingData = state.stegoImageData;
+            let baseData = state.stegoImageData;
+            state.isScrambled = false;
+
+            // ---- Unscramble if password provided ----
+            if (scramPW) {
+                try {
+                    const unscrambled = unscramblePixels(state.stegoImageData, scramPW);
+                    workingData = unscrambled;
+                    baseData = unscrambled;
+                    state.isScrambled = true;
+                    state.scrambleSeed = scramPW;
+                    // Store the unscrambled base for saving
+                    state.baseImageData = cloneImageData(unscrambled);
+                } catch (e) {
+                    setStatus('❌ Unscrambling failed. Wrong password?', 'error');
+                    return;
+                }
+            } else {
+                // No scramble password – use original data as base
+                state.baseImageData = cloneImageData(state.stegoImageData);
+                state.isScrambled = false;
+            }
+
+            // ---- Extract message from workingData ----
+            const result = extractRawFromImageData(workingData);
+            if (result.error) {
+                setStatus('❌ Message appears truncated.', 'error');
+                return;
+            }
+            state.extractedBytes = result.bytes;
+
+            const oldPassword = decryptPassword.value;
+            let plaintext = '';
+            if (result.bytes.length > 0) {
+                if (oldPassword) {
+                    try {
+                        plaintext = await decryptMessage(result.bytes, oldPassword);
+                    } catch (e) {
+                        setStatus('❌ Decryption failed. Wrong password.', 'error');
+                        return;
+                    }
+                } else {
+                    try {
+                        plaintext = new TextDecoder().decode(result.bytes);
+                    } catch (e) {
+                        setStatus('❌ Failed to decode as plaintext. Try providing a decryption password.', 'error');
+                        return;
+                    }
+                }
+            } else {
+                plaintext = '';
+            }
+
+            state.decryptedText = plaintext;
+            state.dataLoaded = true;
+
+            // ---- Update UI ----
+            if (state.mode === 'update') {
+                messageContent.value = plaintext;
+                messageBadge.textContent = `${plaintext.length} characters`;
+                setStatus('✅ Data loaded. Edit the plaintext, then click "Apply & Download".', 'success');
+            } else {
+                messageBadge.textContent = `Existing: ${plaintext.length} characters`;
+                setStatus('✅ Existing data loaded. Type new content below and click "Apply & Download".', 'success');
+                newContentToAdd.value = '';
+            }
+            updateCharCount();
+            updateBtn.disabled = false;
+        }
+
+        async function applyAndDownload() {
+            const mode = state.mode;
+            const encryptPW = encryptPassword.value;
+            const scramPW = scramblePassword.value;
+
+            // ---- Start from the BASE image data (unscrambled version) ----
+            if (!state.baseImageData) {
+                setStatus('❌ No base image data. Load the image first.', 'error');
+                return;
+            }
+
+            let imgData = cloneImageData(state.baseImageData);
+
+            // ---- Prepare the final plaintext ----
+            let finalPlaintext;
+            if (mode === 'add') {
+                const oldText = state.decryptedText || '';
+                const newText = newContentToAdd.value || '';
+                finalPlaintext = oldText + newText;
+            } else {
+                finalPlaintext = messageContent.value;
+            }
+
+            if (finalPlaintext.length > state.capacityBytes) {
+                setStatus(`❌ Message exceeds capacity (${state.capacityBytes} chars).`, 'error');
+                return;
+            }
+
+            // ---- Encrypt ----
+            let messageBytes;
+            try {
+                messageBytes = await encryptMessage(finalPlaintext, encryptPW);
+            } catch (e) {
+                setStatus('❌ Encryption failed: ' + e.message, 'error');
+                return;
+            }
+
+            const finalData = new Uint8Array(2 + messageBytes.length);
+            finalData[0] = (messageBytes.length >> 8) & 0xFF;
+            finalData[1] = messageBytes.length & 0xFF;
+            finalData.set(messageBytes, 2);
+
+            // ---- Embed into the BASE (unscrambled) image ----
+            try {
+                imgData = embedMessageIntoImageData(imgData, finalData);
+            } catch (e) {
+                setStatus('❌ Embedding failed: ' + e.message, 'error');
+                return;
+            }
+
+            // ---- Scramble ONCE (if password provided) ----
+            if (scramPW) {
+                try {
+                    const result = scramblePixels(imgData, scramPW);
+                    imgData = result.imageData;
+                } catch (e) {
+                    setStatus('❌ Scrambling failed: ' + e.message, 'error');
+                    return;
+                }
+            }
+
+            state.updatedImageData = imgData;
+            downloadArea.style.display = 'flex';
+            setStatus('✅ Update complete. Download the PNG.', 'success');
+        }
+
+        function downloadUpdated() {
+            if (!state.updatedImageData) {
+                setStatus('❌ No updated image to download.', 'error');
+                return;
+            }
+            const canvas = canvasFromImageData(state.updatedImageData);
+            const link = document.createElement('a');
+            link.download = downloadFilename.value + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            setStatus('✅ PNG downloaded.', 'success');
+        }
+
+        function resetAll() {
+            state = { stegoImageData: null, baseImageData: null, imageWidth: 0, imageHeight: 0, originalFileSize: 0,
+                extractedBytes: null, decryptedText: '', capacityBytes: 0, updatedImageData: null, mode: 'add',
+                dataLoaded: false, isScrambled: false, scrambleSeed: '' };
+            uploadedImage.src = '';
+            imagePreview.style.display = 'none';
+            messageContent.value = '';
+            newContentToAdd.value = '';
+            messageBadge.textContent = '—';
+            charCount.textContent = '0 / 0';
+            capacityLabel.textContent = 'Max capacity: —';
+            extractBtn.disabled = true;
+            updateBtn.disabled = true;
+            downloadArea.style.display = 'none';
+            decryptPassword.value = '';
+            encryptPassword.value = '';
+            scramblePassword.value = '';
+            setStatus('🔄 Reset. Upload a stego PNG.', '');
+            fileInput.value = '';
+            modeBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('.mode-btn[data-mode="add"]').classList.add('active');
+            switchMode('add');
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) loadImage(file);
+            fileInput.value = '';
+        });
+
+        extractBtn.addEventListener('click', extractAndLoad);
+        updateBtn.addEventListener('click', applyAndDownload);
+        downloadBtn.addEventListener('click', downloadUpdated);
+        resetBtn.addEventListener('click', resetAll);
+
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.mode !== state.mode) {
+                    switchMode(btn.dataset.mode);
+                    if (state.dataLoaded) {
+                        if (state.mode === 'add') {
+                            messageBadge.textContent = `Existing: ${state.decryptedText.length} characters`;
+                            messageContent.value = 'Existing content is hidden. Type new text below to append.';
+                            newContentToAdd.value = '';
+                        } else {
+                            messageContent.value = state.decryptedText;
+                            messageBadge.textContent = `${state.decryptedText.length} characters`;
+                        }
+                    }
+                    updateCharCount();
+                }
+            });
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        switchMode('add');
+        setStatus('📁 Upload a stego PNG to begin.');
+    </script>
 </body>
 </html>
