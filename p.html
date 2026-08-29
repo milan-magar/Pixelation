@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RISC vs CISC Architecture</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* === CSS Variables for theming === */
+        :root {
+            --bg-primary: #0b0e1a;
+            --bg-secondary: #141b2d;
+            --text-primary: #e8edf5;
+            --text-secondary: #bcc9ff;
+            --text-muted: #8fa4d9;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --accent: #6d8eff;
+            --accent-light: #8aa4ff;
+            --nav-bg: rgba(11, 14, 26, 0.8);
+            --code-bg: rgba(0, 0, 0, 0.4);
+            --code-border: rgba(255, 255, 255, 0.06);
+            --tag-risc-bg: rgba(78, 205, 196, 0.15);
+            --tag-risc-text: #4ecdc4;
+            --tag-cisc-bg: rgba(255, 107, 107, 0.15);
+            --tag-cisc-text: #ff6b6b;
+            --modal-bg: #141b2d;
+            --modal-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body[data-theme="light"] {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #2d3a5a;
+            --text-muted: #4a5a7a;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --accent: #4a6cf7;
+            --accent-light: #6d8eff;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --code-bg: rgba(0, 0, 0, 0.05);
+            --code-border: rgba(0, 0, 0, 0.08);
+            --tag-risc-bg: rgba(78, 205, 196, 0.2);
+            --tag-risc-text: #1a7a72;
+            --tag-cisc-bg: rgba(255, 107, 107, 0.2);
+            --tag-cisc-text: #b33a3a;
+            --modal-bg: #ffffff;
+            --modal-border: rgba(0, 0, 0, 0.08);
+        }
+
+        body[data-theme="blue"] {
+            --bg-primary: #0a1628;
+            --bg-secondary: #142a4a;
+            --text-primary: #d6e4ff;
+            --text-secondary: #8ab4ff;
+            --text-muted: #6a8abf;
+            --card-bg: rgba(59, 130, 246, 0.08);
+            --card-border: rgba(59, 130, 246, 0.15);
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --nav-bg: rgba(10, 22, 40, 0.8);
+            --code-bg: rgba(0, 0, 0, 0.3);
+            --code-border: rgba(59, 130, 246, 0.15);
+            --tag-risc-bg: rgba(78, 205, 196, 0.15);
+            --tag-risc-text: #4ecdc4;
+            --tag-cisc-bg: rgba(255, 107, 107, 0.15);
+            --tag-cisc-text: #ff6b6b;
+            --modal-bg: #142a4a;
+            --modal-border: rgba(59, 130, 246, 0.15);
+        }
+
+        body[data-theme="green"] {
+            --bg-primary: #0a1a0a;
+            --bg-secondary: #143014;
+            --text-primary: #d4edda;
+            --text-secondary: #7dcea0;
+            --text-muted: #5a8f6a;
+            --card-bg: rgba(46, 204, 113, 0.08);
+            --card-border: rgba(46, 204, 113, 0.15);
+            --accent: #2ecc71;
+            --accent-light: #58d68d;
+            --nav-bg: rgba(10, 26, 10, 0.8);
+            --code-bg: rgba(0, 0, 0, 0.3);
+            --code-border: rgba(46, 204, 113, 0.15);
+            --tag-risc-bg: rgba(78, 205, 196, 0.15);
+            --tag-risc-text: #4ecdc4;
+            --tag-cisc-bg: rgba(255, 107, 107, 0.15);
+            --tag-cisc-text: #ff6b6b;
+            --modal-bg: #143014;
+            --modal-border: rgba(46, 204, 113, 0.15);
+        }
+
+        /* === Global Reset & Base === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 30% 20%, var(--bg-secondary), var(--bg-primary));
+            transition: background 0.4s ease;
+        }
+        .slides-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem 3rem 6rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                visibility 0.6s;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #3b4a6b transparent;
+        }
+        .slide::-webkit-scrollbar { width: 4px; }
+        .slide::-webkit-scrollbar-track { background: transparent; }
+        .slide::-webkit-scrollbar-thumb { background: #3b4a6b; border-radius: 8px; }
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            animation: fadeUp 0.7s ease forwards;
+            padding-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        .slide-center .slide-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .slide-center .slide-content>* { text-align: center; max-width: 100%; }
+        .slide-center .slide-content p { text-align: center; max-width: 700px; }
+        .slide-center .slide-content .pill-group { justify-content: center; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === Reusable Components === */
+        .slide-badge {
+            display: inline-block;
+            background: rgba(99, 133, 255, 0.15);
+            color: var(--accent-light);
+            padding: 0.3rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: 1px solid rgba(99, 133, 255, 0.2);
+            margin-bottom: 1rem;
+            align-self: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        .slide h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .slide h2 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        .slide h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .slide p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            max-width: 780px;
+        }
+        .slide .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-top: 0.25rem;
+        }
+
+        /* Grids & Cards */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.2rem; margin-top: 1.5rem; }
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            transition: transform 0.25s ease, border-color 0.3s, background 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .card .icon { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.75rem; }
+        .card h4 { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem; }
+        .card p { font-size: 0.98rem; line-height: 1.6; color: var(--text-muted); max-width: 100%; flex: 1; }
+        .card.risc { border-left: 4px solid #4ecdc4; }
+        .card.cisc { border-left: 4px solid #ff6b6b; }
+        .card.accent { border-left: 4px solid var(--accent); }
+        .card .click-hint {
+            font-size: 0.7rem;
+            color: #4a5a7a;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            opacity: 0.6;
+        }
+
+        /* Interactive elements */
+        .script-trigger {
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+            position: relative;
+        }
+        .script-trigger:hover { color: var(--accent-light); }
+        .script-trigger .info-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-left: 0.3rem;
+            vertical-align: middle;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .script-trigger:hover .info-dot { opacity: 1; }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 1.2rem 1.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--code-border);
+            margin-top: 0.8rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-width: 100%;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            text-align: left;
+        }
+        .code-block:hover { border-color: var(--accent); background: rgba(0,0,0,0.6); }
+        .code-block .comment { color: #6a7a9a; }
+
+        .table-wrap {
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: rgba(109, 142, 255, 0.08);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        td {
+            padding: 0.9rem 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-muted);
+        }
+        tr:last-child td { border-bottom: none; }
+        td .tag {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .tag.risc-tag { background: var(--tag-risc-bg); color: var(--tag-risc-text); }
+        .tag.cisc-tag { background: var(--tag-cisc-bg); color: var(--tag-cisc-text); }
+
+        .pill-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+        .pill {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.4rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .pill:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .pill.risc-pill { border-color: rgba(78,205,196,0.25); color: #4ecdc4; }
+        .pill.cisc-pill { border-color: rgba(255,107,107,0.25); color: #ff6b6b; }
+
+        .architecture-icon { font-size: 4.5rem; margin-bottom: 0.5rem; display: inline-block; }
+        .slide-tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .equation {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            background: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .equation:hover { border-color: var(--accent); background: rgba(255,255,255,0.06); }
+        .equation .highlight { color: var(--accent); }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .comparison-grid .col {
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            text-align: left;
+        }
+        .comparison-grid .col:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        .comparison-grid .col h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .comparison-grid .col ul {
+            list-style: none;
+            padding: 0;
+        }
+        .comparison-grid .col ul li {
+            padding: 0.3rem 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        /* Pipeline Diagram */
+        .pipeline-diagram {
+            background: var(--code-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid var(--code-border);
+            margin-top: 1rem;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .pipeline-diagram table {
+            min-width: 500px;
+            width: auto;
+            margin: 0 auto;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+        }
+        .pipeline-diagram th, .pipeline-diagram td {
+            padding: 0.5rem 0.8rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            min-width: 50px;
+        }
+        .pipeline-diagram th {
+            background: rgba(109,142,255,0.1);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .pipeline-diagram td {
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        .pipeline-diagram .stage-active { background: rgba(78,205,196,0.12); color: #4ecdc4; }
+        .pipeline-diagram .stage-inactive { color: #3d4a6a; }
+        .pipeline-legend {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #6a7a9a;
+        }
+        .pipeline-legend span { display: flex; align-items: center; gap: 0.4rem; }
+        .pipeline-legend .dot-active {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: rgba(78,205,196,0.3);
+            border: 1px solid rgba(78,205,196,0.3);
+        }
+        .pipeline-legend .dot-inactive {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: var(--nav-bg);
+            backdrop-filter: blur(16px);
+            padding: 0.5rem 1.4rem;
+            border-radius: 60px;
+            border: 1px solid var(--card-border);
+            z-index: 100;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            transition: background 0.3s, border 0.3s;
+        }
+        .nav-controls button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            padding: 0.3rem 0.6rem;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-controls button:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-primary);
+        }
+        .nav-controls .dots {
+            display: flex;
+            gap: 0.45rem;
+            align-items: center;
+        }
+        .nav-controls .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .nav-controls .dot.active {
+            background: var(--accent);
+            transform: scale(1.4);
+            box-shadow: 0 0 12px rgba(109,142,255,0.3);
+        }
+        .nav-controls .dot:hover { background: rgba(255,255,255,0.35); }
+        .nav-controls .slide-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 44px;
+            text-align: center;
+            letter-spacing: 0.02em;
+            user-select: none;
+        }
+        .keyboard-hint {
+            position: fixed;
+            bottom: 4.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #3d4a6a;
+            letter-spacing: 0.04em;
+            z-index: 90;
+            background: rgba(0,0,0,0.3);
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.03);
+            backdrop-filter: blur(4px);
+            font-weight: 400;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        /* Script Modal */
+        .script-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .script-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .script-modal {
+            max-width: 750px;
+            width: 100%;
+            max-height: 80vh;
+            background: var(--modal-bg);
+            border: 1px solid var(--modal-border);
+            border-radius: 24px;
+            padding: 2.5rem 2.8rem 2rem 2.8rem;
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            animation: modalSlideUp 0.4s cubic-bezier(0.23,1,0.32,1);
+            transition: background 0.3s, border 0.3s;
+        }
+        .script-modal::-webkit-scrollbar { width: 4px; }
+        .script-modal::-webkit-scrollbar-track { background: transparent; }
+        .script-modal::-webkit-scrollbar-thumb { background: #3b4a6b; border-radius: 8px; }
+        @keyframes modalSlideUp {
+            from { transform: translateY(40px) scale(0.96); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .script-modal .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+        .script-modal .modal-close:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+        .script-modal .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding-right: 2.5rem;
+        }
+        .script-modal .modal-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+        .script-modal .modal-body strong { color: var(--text-primary); }
+        .script-modal .modal-body .hl-risc { color: #4ecdc4; }
+        .script-modal .modal-body .hl-cisc { color: #ff6b6b; }
+        .script-modal .modal-body .diagram-svg {
+            max-width: 100%;
+            margin: 1rem 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 0.5rem;
+            border: 1px solid var(--card-border);
+        }
+        .script-modal .modal-body .diagram-svg svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .slide { padding: 1.5rem 1.8rem 5.5rem 1.8rem; }
+            .slide h1 { font-size: 2.8rem; }
+            .slide h2 { font-size: 2rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 1.2rem; }
+            .grid-4 { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .comparison-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .table-wrap { font-size: 0.8rem; }
+            th, td { padding: 0.6rem 0.8rem; }
+            .nav-controls { padding: 0.4rem 1rem; gap: 0.8rem; bottom: 1rem; }
+            .nav-controls .slide-counter { min-width: 36px; font-size: 0.7rem; }
+            .nav-controls button { font-size: 1rem; padding: 0.2rem 0.4rem; }
+            .nav-controls .dot { width: 6px; height: 6px; }
+            .script-modal { padding: 1.5rem; max-height: 90vh; }
+            .script-modal .modal-body { font-size: 0.95rem; }
+            .pipeline-diagram table { font-size: 0.7rem; min-width: 350px; }
+            .pipeline-diagram th, .pipeline-diagram td { padding: 0.3rem 0.4rem; min-width: 35px; }
+        }
+        @media (max-width: 500px) {
+            .slide { padding: 1rem 1rem 5rem 1rem; }
+            .slide h1 { font-size: 2rem; }
+            .slide h2 { font-size: 1.6rem; }
+            .slide p { font-size: 0.95rem; }
+            .card { padding: 1.2rem 1.2rem; }
+            .grid-4 { grid-template-columns: 1fr; }
+            .nav-controls { padding: 0.35rem 0.8rem; gap: 0.5rem; bottom: 0.75rem; border-radius: 40px; }
+            .nav-controls .slide-counter { min-width: 30px; font-size: 0.65rem; }
+            .nav-controls button { font-size: 0.9rem; padding: 0.15rem 0.3rem; }
+            .nav-controls .dot { width: 5px; height: 5px; }
+            .keyboard-hint { display: none; }
+            .script-modal { padding: 1rem; max-height: 95vh; }
+            .script-modal .modal-title { font-size: 1.1rem; }
+            .pipeline-diagram table { font-size: 0.6rem; min-width: 280px; }
+            .pipeline-diagram th, .pipeline-diagram td { padding: 0.2rem 0.3rem; min-width: 28px; }
+        }
+        @media (max-width: 700px) { .keyboard-hint { display: none; } }
+    </style>
+</head>
+<body>
+
+    <div class="presentation">
+
+        <div class="slides-wrapper">
+
+            <!-- ===== SLIDE 0: TITLE ===== -->
+            <div class="slide slide-center active" data-index="0">
+                <div class="slide-content">
+                    <div class="architecture-icon">⚙️</div>
+                    <span class="slide-badge">Computer Architecture Evolution</span>
+                    <h1 class="script-trigger" data-script="title">CISC vs RISC<br>Processors</h1>
+                    <p class="subtitle">Exploring the historical drivers, architectural tradeoffs, and design paradigms of modern processing power.</p>
+                    <div class="pill-group" style="justify-content:center;">
+                        <span class="pill risc-pill script-trigger" data-script="risc_intro">RISC</span>
+                        <span class="pill cisc-pill script-trigger" data-script="cisc_intro">CISC</span>
+                        <span class="pill script-trigger" data-script="performance">Performance</span>
+                        <span class="pill script-trigger" data-script="efficiency">Efficiency</span>
+                    </div>
+                    <div style="margin-top: 1.8rem; font-size:0.85rem; color:var(--text-muted); text-align:center;">
+                        <i class="fas fa-info-circle" style="color:var(--accent); margin-right:0.4rem;"></i>
+                        Click any <strong style="color:var(--text-secondary);">highlighted</strong> element for a detailed script explanation.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 1: WHAT IS A PROCESSOR? ===== -->
+            <div class="slide" data-index="1">
+                <div class="slide-content">
+                    <span class="slide-badge">Part 1</span>
+                    <h2 class="script-trigger" data-script="processor_intro">What is a Processor?</h2>
+                    <p style="font-size:1.2rem; margin-bottom:1rem;">
+                        <span class="script-trigger" data-script="processor_brain">The <strong>brain</strong> of the computer</span> – it takes instructions and data as inputs and manipulates the data.
+                    </p>
+                    <p>
+                        Each processor has an <strong>instruction set</strong> – a collection of operations it can perform.
+                        Computer architectures are classified into two types based on their instruction sets:
+                    </p>
+                    <div class="grid-2" style="margin-top:1.2rem;">
+                        <div class="card cisc script-trigger" data-script="cisc_definition">
+                            <div class="icon"><i class="fas fa-microchip"></i></div>
+                            <h4>CISC</h4>
+                            <p><strong>Complex Instruction Set Computer</strong> – rich, multi‑cycle instructions.</p>
+                            <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click for script</div>
+                        </div>
+                        <div class="card risc script-trigger" data-script="risc_definition">
+                            <div class="icon"><i class="fas fa-microchip"></i></div>
+                            <h4>RISC</h4>
+                            <p><strong>Reduced Instruction Set Computer</strong> – simple, single‑cycle instructions.</p>
+                            <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click for script</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 2: CORE ROLE ===== -->
+            <div class="slide" data-index="2">
+                <div class="slide-content">
+                    <span class="slide-badge">Foundation</span>
+                    <h2 class="script-trigger" data-script="core_role">The Core Role of a Processor</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card accent script-trigger" data-script="brain_system">
+                            <div class="icon"><i class="fas fa-brain"></i></div>
+                            <h4>Brain of the System</h4>
+                            <p>The processor receives inputs consisting of instructions and raw data to perform data manipulation.</p>
+                        </div>
+                        <div class="card accent script-trigger" data-script="isa">
+                            <div class="icon"><i class="fas fa-code-branch"></i></div>
+                            <h4>Instruction Set Architecture (ISA)</h4>
+                            <p>The defined set of operations supported by the hardware, forming the interface between software and silicon.</p>
+                        </div>
+                        <div class="card accent script-trigger" data-script="arch_classifications" style="grid-column:1/3;">
+                            <div class="icon"><i class="fas fa-sitemap"></i></div>
+                            <h4>Architectural Classifications</h4>
+                            <p>ISA design splits computer architectures into two primary schools of thought:</p>
+                            <div style="display:flex; gap:1.5rem; margin-top:0.6rem; flex-wrap:wrap;">
+                                <span style="color:#ff6b6b; font-weight:600;"><i class="fas fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> CISC: Complex Instruction Set Computer</span>
+                                <span style="color:#4ecdc4; font-weight:600;"><i class="fas fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> RISC: Reduced Instruction Set Computer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 3: PRE-1970 MEMORY ===== -->
+            <div class="slide" data-index="3">
+                <div class="slide-content">
+                    <span class="slide-badge">Historical Context</span>
+                    <h2 class="script-trigger" data-script="pre1970">Pre-1970 Memory Constraints</h2>
+                    <div class="grid-3" style="margin-top:0.8rem;">
+                        <div class="card cisc script-trigger" data-script="slow_ram">
+                            <div class="icon"><i class="fas fa-memory"></i></div>
+                            <h4>Slow &amp; Expensive RAM</h4>
+                            <p>Memory was extremely constrained and costly, requiring programs to take up minimal space.</p>
+                        </div>
+                        <div class="card cisc script-trigger" data-script="compiler_challenges">
+                            <div class="icon"><i class="fas fa-code"></i></div>
+                            <h4>Compiler Challenges</h4>
+                            <p>Translating complex HLL constructs into low-level machine code was difficult, tedious, and error-prone.</p>
+                        </div>
+                        <div class="card cisc script-trigger" data-script="bridge_gap">
+                            <div class="icon"><i class="fas fa-bridge"></i></div>
+                            <h4>Bridging the Gap</h4>
+                            <p>Hardware architects created compact instructions to simplify compiler design and save memory space.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 4: COMPACT INSTRUCTIONS ===== -->
+            <div class="slide" data-index="4">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#ff6b6b; border-color:rgba(255,107,107,0.3); background:rgba(255,107,107,0.1);">CISC Era</span>
+                    <h2 class="script-trigger" data-script="compact_instr_title">The Era of Compact Instructions</h2>
+                    <p style="font-weight:600; color:var(--text-secondary); margin-bottom:0.5rem;">Doing More in One Command</p>
+                    <p>
+                        A single CISC instruction automatically handles multi-step operations:
+                    </p>
+                    <div class="code-block script-trigger" data-script="mult_explanation" style="text-align:left;">
+                        MULT [A], [B]
+                    </div>
+                    <ul style="color:var(--text-muted); list-style:disc; padding-left:1.5rem; margin-top:0.5rem; font-size:1rem;">
+                        <li>Fetches values directly from memory locations A and B.</li>
+                        <li>Loads data implicitly into internal registers.</li>
+                        <li>Performs multiplication and writes back to memory.</li>
+                    </ul>
+                    <div class="grid-2" style="margin-top:1rem;">
+                        <div class="card cisc script-trigger" data-script="software_savings">
+                            <div class="icon"><i class="fas fa-compress"></i></div>
+                            <h4>Software &amp; Memory Savings</h4>
+                            <p>Compact instructions drastically reduced binary file size when every byte of RAM was costly.</p>
+                        </div>
+                        <div class="card cisc script-trigger" data-script="compiler_simplify">
+                            <div class="icon"><i class="fas fa-cogs"></i></div>
+                            <h4>Compiler Simplification</h4>
+                            <p>By delegating multi-step execution logic to silicon hardware, compilers required significantly less complexity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 5: SILICON BURDEN ===== -->
+            <div class="slide" data-index="5">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#ff6b6b; border-color:rgba(255,107,107,0.3); background:rgba(255,107,107,0.1);">The Cost of Complexity</span>
+                    <h2 class="script-trigger" data-script="silicon_burden">Silicon Burden &amp; Natural CISC</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card cisc script-trigger" data-script="hardware_burden">
+                            <div class="icon"><i class="fas fa-weight-hanging"></i></div>
+                            <h4>Hardware Burden</h4>
+                            <p>Shifting complexity into hardware required supporting hundreds of specialized silicon instructions.</p>
+                        </div>
+                        <div class="card cisc script-trigger" data-script="physical_drawbacks">
+                            <div class="icon"><i class="fas fa-bolt"></i></div>
+                            <h4>Physical Drawbacks</h4>
+                            <p>Processor designs grew dense and expensive, consuming substantial power and generating excessive heat.</p>
+                        </div>
+                        <div class="card cisc script-trigger" data-script="retroactive_term" style="grid-column:1/3;">
+                            <div class="icon"><i class="fas fa-history"></i></div>
+                            <h4>Retroactive Terminology</h4>
+                            <p>CISC evolved organically; the term "CISC" was coined retroactively after RISC was conceptualized. Computer architects didn't explicitly set out to create Complex Instruction Set Computers — they naturally evolved due to the conditions existing at that time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 6: RISC REVOLUTION ===== -->
+            <div class="slide" data-index="6">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#4ecdc4; border-color:rgba(78,205,196,0.3); background:rgba(78,205,196,0.1);">Part 2</span>
+                    <h2 class="script-trigger" data-script="risc_revolution">The RISC Revolution</h2>
+                    <p style="font-size:1.2rem;">
+                        Discovering the 80/20 discovery and fundamentally rethinking processor design.
+                    </p>
+                    <div style="margin-top:1.5rem; padding:1.5rem 2rem; background:rgba(78,205,196,0.05); border-radius:16px; border:1px solid rgba(78,205,196,0.1); text-align:center;">
+                        <span style="font-size:3rem; display:block; margin-bottom:0.5rem;">📊</span>
+                        <span style="color:#4ecdc4; font-weight:600; font-size:1.4rem;">"20% of instructions are used 80% of the time"</span>
+                        <p style="margin-top:0.5rem; font-size:1rem; color:var(--text-muted);">— The discovery that changed processor design forever</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 7: 80/20 DISCOVERY ===== -->
+            <div class="slide" data-index="7">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#4ecdc4; border-color:rgba(78,205,196,0.3); background:rgba(78,205,196,0.1);">The Turning Point</span>
+                    <h2 class="script-trigger" data-script="eighty_twenty_title">The 80/20 Discovery</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card risc script-trigger" data-script="eighty_twenty_rule">
+                            <div class="icon"><i class="fas fa-percent"></i></div>
+                            <h4>The 80/20 Rule Discovery</h4>
+                            <p>In the early 1980s, empirical studies revealed that 80% of a program's execution used only 20% of the instruction set. Most complex CISC instructions were rarely used, taking up valuable silicon real estate for minimal gain.</p>
+                        </div>
+                        <div class="card risc script-trigger" data-script="risc_philosophy">
+                            <div class="icon"><i class="fas fa-lightbulb"></i></div>
+                            <h4>The RISC Philosophy</h4>
+                            <p>Engineers stripped away complex operations, designing processors around a small set of simple, fast, heavily-used instructions. This streamlined approach was named <strong>Reduced Instruction Set Computer (RISC)</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 8: CODE EXECUTION COMPARISON ===== -->
+            <div class="slide" data-index="8">
+                <div class="slide-content">
+                    <span class="slide-badge">Code Execution</span>
+                    <h2 class="script-trigger" data-script="code_comparison_title">Code Execution Comparison</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card cisc script-trigger" data-script="cisc_code_example">
+                            <div class="icon"><i class="fas fa-code" style="color:#ff6b6b;"></i></div>
+                            <h4 style="color:#ff6b6b;">CISC Execution (1 Line)</h4>
+                            <div class="code-block" style="font-size:0.9rem; margin-top:0.3rem; border-color:rgba(255,107,107,0.2); text-align:left;">
+                                MULT [A], [B]
+                            </div>
+                            <ul style="color:var(--text-muted); list-style:disc; padding-left:1.2rem; font-size:0.9rem; margin-top:0.5rem; text-align:left;">
+                                <li>Single Complex Command</li>
+                                <li>High instruction density</li>
+                                <li>Variable-length bytes</li>
+                                <li>Multiple internal clock cycles</li>
+                                <li>Direct memory access</li>
+                            </ul>
+                        </div>
+                        <div class="card risc script-trigger" data-script="risc_code_example">
+                            <div class="icon"><i class="fas fa-code" style="color:#4ecdc4;"></i></div>
+                            <h4 style="color:#4ecdc4;">RISC Execution (4 Lines)</h4>
+                            <div class="code-block" style="font-size:0.85rem; margin-top:0.3rem; border-color:rgba(78,205,196,0.2); text-align:left;">
+                                LOAD   R1, [A]<br>
+                                LOAD   R2, [B]<br>
+                                PROD   R3, R1, R2<br>
+                                STORE  R3, [A]
+                            </div>
+                            <ul style="color:var(--text-muted); list-style:disc; padding-left:1.2rem; font-size:0.9rem; margin-top:0.5rem; text-align:left;">
+                                <li>Load/Store Architecture</li>
+                                <li>Multiple simple instructions</li>
+                                <li>Uniform fixed length</li>
+                                <li>Single clock cycles</li>
+                                <li>Register-to-register operations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 9: PIPELINING ===== -->
+            <div class="slide" data-index="9">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#4ecdc4; border-color:rgba(78,205,196,0.3); background:rgba(78,205,196,0.1);">RISC Advantage</span>
+                    <h2 class="script-trigger" data-script="pipelining_title">Pipelining &amp; Execution Speed</h2>
+                    <p style="font-size:1.05rem; margin-bottom:0.5rem;">
+                        RISC's fixed-length instructions enable efficient pipelining — an assembly-line approach to instruction execution.
+                    </p>
+
+                    <!-- Pipeline Diagram -->
+                    <div class="pipeline-diagram script-trigger" data-script="pipeline_diagram_explanation">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Instruction</th>
+                                    <th>t1</th>
+                                    <th>t2</th>
+                                    <th>t3</th>
+                                    <th>t4</th>
+                                    <th>t5</th>
+                                    <th>t6</th>
+                                    <th>t7</th>
+                                    <th>t8</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight:600; color:var(--text-muted);">Instr. 1</td>
+                                    <td class="stage-active">IF</td>
+                                    <td class="stage-active">ID</td>
+                                    <td class="stage-active">IE</td>
+                                    <td class="stage-active">RW</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:600; color:var(--text-muted);">Instr. 2</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-active">IF</td>
+                                    <td class="stage-active">ID</td>
+                                    <td class="stage-active">IE</td>
+                                    <td class="stage-active">RW</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:600; color:var(--text-muted);">Instr. 3</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-active">IF</td>
+                                    <td class="stage-active">ID</td>
+                                    <td class="stage-active">IE</td>
+                                    <td class="stage-active">RW</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:600; color:var(--text-muted);">Instr. 4</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-active">IF</td>
+                                    <td class="stage-active">ID</td>
+                                    <td class="stage-active">IE</td>
+                                    <td class="stage-active">RW</td>
+                                    <td class="stage-inactive">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:600; color:var(--text-muted);">Instr. 5</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-inactive">--</td>
+                                    <td class="stage-active">IF</td>
+                                    <td class="stage-active">ID</td>
+                                    <td class="stage-active">IE</td>
+                                    <td class="stage-active">RW</td>
+                                </tr>
+                                <tr style="border-top:2px solid rgba(255,255,255,0.06);">
+                                    <td style="font-weight:600; color:#6a7a9a; font-size:0.8rem;"># Stages</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">1</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">2</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">3</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">4</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">4</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">3</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">2</td>
+                                    <td style="color:#4ecdc4; font-weight:600;">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pipeline-legend">
+                            <span><span class="dot-active"></span> Stage engaged</span>
+                            <span><span class="dot-inactive"></span> No instruction</span>
+                            <span style="color:#4ecdc4; font-weight:500;">IF: Fetch &nbsp;|&nbsp; ID: Decode &nbsp;|&nbsp; IE: Execute &nbsp;|&nbsp; RW: Write-back</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:0.8rem; padding:0.6rem 1.2rem; background:rgba(78,205,196,0.06); border-radius:12px; border-left:3px solid #4ecdc4;">
+                        <span style="color:var(--text-muted); font-size:0.9rem;">
+                            <i class="fas fa-arrow-right" style="color:#4ecdc4; margin-right:0.5rem;"></i>
+                            <strong style="color:#4ecdc4;">Pipeline:</strong> When one instruction is being executed, the next is being decoded, and the third is being fetched — all in one clock cycle.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 10: REALLOCATING TRANSISTORS ===== -->
+            <div class="slide" data-index="10">
+                <div class="slide-content">
+                    <span class="slide-badge" style="color:#4ecdc4; border-color:rgba(78,205,196,0.3); background:rgba(78,205,196,0.1);">Hardware Efficiency</span>
+                    <h2 class="script-trigger" data-script="transistors_title">Reallocating Saved Transistors</h2>
+                    <div class="grid-3" style="margin-top:0.8rem;">
+                        <div class="card risc script-trigger" data-script="more_registers">
+                            <div class="icon"><i class="fas fa-database"></i></div>
+                            <h4>More Registers</h4>
+                            <p>Saved silicon was reallocated to large register files, enabling fast data access directly inside the CPU.</p>
+                        </div>
+                        <div class="card risc script-trigger" data-script="onchip_cache">
+                            <div class="icon"><i class="fas fa-memory"></i></div>
+                            <h4>On-Chip Caches</h4>
+                            <p>Transistors were used to build dedicated L1/L2 caches, eliminating external RAM bottlenecks.</p>
+                        </div>
+                        <div class="card risc script-trigger" data-script="math_coprocessors">
+                            <div class="icon"><i class="fas fa-calculator"></i></div>
+                            <h4>Math Coprocessors</h4>
+                            <p>Dedicated Floating Point Units (FPUs) were added to accelerate complex floating-point mathematics.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:1rem; padding:0.6rem 1.2rem; background:rgba(109,142,255,0.06); border-radius:10px; border-left:3px solid var(--accent);">
+                        <span style="color:var(--text-muted); font-size:0.9rem;">
+                            <i class="fas fa-arrow-right" style="color:var(--accent); margin-right:0.5rem;"></i>
+                            With simpler RISC hardware, saved transistors were used to increase registers, cache, and math coprocessors — improving performance without increasing power.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 11: PERFORMANCE EQUATION ===== -->
+            <div class="slide" data-index="11">
+                <div class="slide-content">
+                    <span class="slide-badge">The Math</span>
+                    <h2 class="script-trigger" data-script="perf_eq_title">The Performance Equation</h2>
+                    <div class="equation script-trigger" data-script="perf_eq_detailed">
+                        Execution Time = <span class="highlight">Instruction Count</span> × <span class="highlight">CPI</span> × <span class="highlight">Clock Cycle Time</span>
+                    </div>
+                    <div class="comparison-grid">
+                        <div class="col script-trigger" data-script="cisc_perf_strategy" style="border-left:4px solid #ff6b6b;">
+                            <h4 style="color:#ff6b6b;"><i class="fas fa-arrow-down"></i> CISC Optimization Strategy</h4>
+                            <ul>
+                                <li><i class="fas fa-check" style="color:#ff6b6b;"></i> Reduces <strong>Instruction Count</strong> using dense, multi-operation commands</li>
+                                <li><i class="fas fa-times" style="color:#ff6b6b;"></i> Accepts higher <strong>CPI</strong> (typically 2 to 10+ cycles per instruction)</li>
+                            </ul>
+                        </div>
+                        <div class="col script-trigger" data-script="risc_perf_strategy" style="border-left:4px solid #4ecdc4;">
+                            <h4 style="color:#4ecdc4;"><i class="fas fa-arrow-up"></i> RISC Optimization Strategy</h4>
+                            <ul>
+                                <li><i class="fas fa-check" style="color:#4ecdc4;"></i> Minimizes <strong>CPI</strong> (~1 cycle) and <strong>Clock Cycle Time</strong></li>
+                                <li><i class="fas fa-times" style="color:#4ecdc4;"></i> Accepts higher overall <strong>Instruction Count</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 12: COMPARISON TABLE ===== -->
+            <div class="slide" data-index="12">
+                <div class="slide-content">
+                    <span class="slide-badge">At a Glance</span>
+                    <h2 class="script-trigger" data-script="comparison_table_title">Architectural Comparison Table</h2>
+                    <div class="table-wrap script-trigger" data-script="comparison_table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>CISC (Complex)</th>
+                                    <th>RISC (Reduced)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Instruction Set Size</strong></td>
+                                    <td><span class="tag cisc-tag">Large (300–1200+)</span></td>
+                                    <td><span class="tag risc-tag">Small (&lt;100)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cycles Per Instruction (CPI)</strong></td>
+                                    <td><span class="tag cisc-tag">Variable (2–10+)</span></td>
+                                    <td><span class="tag risc-tag">Constant (~1)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Memory Access Mode</strong></td>
+                                    <td><span class="tag cisc-tag">Direct memory operations</span></td>
+                                    <td><span class="tag risc-tag">Load/Store only</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hardware Emphasis</strong></td>
+                                    <td><span class="tag cisc-tag">Complex microcode &amp; silicon</span></td>
+                                    <td><span class="tag risc-tag">Smart software compilers</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Primary Advantages</strong></td>
+                                    <td><span class="tag cisc-tag">Compact code, backward compat</span></td>
+                                    <td><span class="tag risc-tag">High speed, low power, pipelining</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:0.6rem; padding:0.4rem 1rem; background:var(--card-bg); border-radius:8px; text-align:center;">
+                        <span style="color:var(--text-muted); font-size:0.8rem;">
+                            <i class="fas fa-info-circle" style="color:var(--accent); margin-right:0.4rem;"></i>
+                            Click the table for a detailed script explanation.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 13: INDUSTRY DOMINANCE ===== -->
+            <div class="slide" data-index="13">
+                <div class="slide-content">
+                    <span class="slide-badge">Real World</span>
+                    <h2 class="script-trigger" data-script="industry_title">Real-World Industry Dominance</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card cisc script-trigger" data-script="cisc_dominance">
+                            <div class="icon"><i class="fas fa-desktop" style="color:#ff6b6b;"></i></div>
+                            <h4 style="color:#ff6b6b;">CISC: Intel x86 &amp; AMD</h4>
+                            <p>Dominates PC desktops, laptops, and enterprise data center servers where backward compatibility and legacy software support are paramount.</p>
+                            <div style="margin-top:0.5rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
+                                <span class="tag cisc-tag">Intel</span>
+                                <span class="tag cisc-tag">AMD</span>
+                                <span class="tag cisc-tag">x86-64</span>
+                            </div>
+                        </div>
+                        <div class="card risc script-trigger" data-script="risc_dominance">
+                            <div class="icon"><i class="fas fa-mobile-alt" style="color:#4ecdc4;"></i></div>
+                            <h4 style="color:#4ecdc4;">RISC: ARM &amp; Apple Silicon</h4>
+                            <p>Dominates mobile phones, tablets, IoT, wearables, and modern high-efficiency computers (e.g. Apple M-series) due to superior performance per watt.</p>
+                            <div style="margin-top:0.5rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
+                                <span class="tag risc-tag">ARM</span>
+                                <span class="tag risc-tag">Apple M</span>
+                                <span class="tag risc-tag">Qualcomm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:0.8rem; padding:0.6rem 1.2rem; background:var(--card-bg); border-radius:10px; border:1px solid var(--card-border); text-align:center;">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">
+                            <i class="fas fa-globe" style="color:var(--accent); margin-right:0.4rem;"></i>
+                            CISC dominates in <strong style="color:#ff6b6b;">PCs &amp; servers</strong> • RISC dominates in <strong style="color:#4ecdc4;">mobile &amp; embedded</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 14: REAL-WORLD EXAMPLES ===== -->
+            <div class="slide" data-index="14">
+                <div class="slide-content">
+                    <span class="slide-badge">Specific Chips</span>
+                    <h2 class="script-trigger" data-script="real_examples_title">Real-World Examples</h2>
+                    <div class="grid-2" style="margin-top:0.8rem;">
+                        <div class="card cisc script-trigger" data-script="cisc_example_detail">
+                            <div class="icon"><i class="fas fa-microchip" style="color:#ff6b6b;"></i></div>
+                            <h4 style="color:#ff6b6b;">CISC: Intel Core i9 (x86)</h4>
+                            <p><strong>Key Features:</strong></p>
+                            <ul style="color:var(--text-muted); list-style:disc; padding-left:1.2rem; font-size:0.95rem; margin-top:0.3rem; text-align:left;">
+                                <li>Massive instruction set (over 1000 instructions)</li>
+                                <li>Variable instruction length (1–15 bytes)</li>
+                                <li>Complex addressing modes</li>
+                                <li>High clock speeds (5+ GHz)</li>
+                                <li>Microcode-controlled execution</li>
+                            </ul>
+                            <p style="margin-top:0.5rem; font-size:0.9rem; color:var(--text-muted);">
+                                <i class="fas fa-check-circle" style="color:#ff6b6b;"></i> Used in high-performance desktops, gaming, servers.
+                            </p>
+                            <div style="margin-top:0.5rem; background:rgba(255,107,107,0.06); padding:0.4rem 0.8rem; border-radius:8px; font-size:0.8rem; color:#ff6b6b; border:1px solid rgba(255,107,107,0.1); text-align:left;">
+                                <i class="fas fa-code"></i> Example: <code style="color:var(--text-secondary);">MULT [A], [B]</code>
+                            </div>
+                        </div>
+                        <div class="card risc script-trigger" data-script="risc_example_detail">
+                            <div class="icon"><i class="fas fa-microchip" style="color:#4ecdc4;"></i></div>
+                            <h4 style="color:#4ecdc4;">RISC: Apple M3 (ARM)</h4>
+                            <p><strong>Key Features:</strong></p>
+                            <ul style="color:var(--text-muted); list-style:disc; padding-left:1.2rem; font-size:0.95rem; margin-top:0.3rem; text-align:left;">
+                                <li>Small, fixed-length (32-bit) instructions</li>
+                                <li>Load/Store architecture</li>
+                                <li>Large register file (32+ registers)</li>
+                                <li>Efficient pipelining</li>
+                                <li>High performance per watt</li>
+                            </ul>
+                            <p style="margin-top:0.5rem; font-size:0.9rem; color:var(--text-muted);">
+                                <i class="fas fa-check-circle" style="color:#4ecdc4;"></i> Used in MacBooks, iPads, iPhones, and high-efficiency laptops.
+                            </p>
+                            <div style="margin-top:0.5rem; background:rgba(78,205,196,0.06); padding:0.4rem 0.8rem; border-radius:8px; font-size:0.8rem; color:#4ecdc4; border:1px solid rgba(78,205,196,0.1); text-align:left;">
+                                <i class="fas fa-code"></i> Example: <code style="color:var(--text-secondary);">LOAD R1, [A]</code> <code style="color:var(--text-secondary);">PROD R3, R1, R2</code>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:0.8rem; padding:0.5rem 1rem; background:var(--card-bg); border-radius:10px; border:1px solid var(--card-border); text-align:center;">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">
+                            <i class="fas fa-info-circle" style="color:var(--accent); margin-right:0.4rem;"></i>
+                            Click each card to see detailed script explanations with architecture diagrams.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SLIDE 15: QUESTIONS ===== -->
+            <div class="slide slide-center" data-index="15">
+                <div class="slide-content">
+                    <span class="slide-badge">Thank You</span>
+                    <h2 style="text-align:center;">Questions &amp; Discussion</h2>
+                    <div style="font-size:4rem; margin:1rem 0; text-align:center;">🙋</div>
+                    <p style="text-align:center; max-width:600px; margin:0 auto;">
+                        Thank you for exploring the architectural evolution from CISC to RISC processors!
+                    </p>
+                    <div style="margin-top:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+                        <span class="pill risc-pill script-trigger" data-script="pill_arm"><i class="fas fa-microchip"></i> ARM</span>
+                        <span class="pill cisc-pill script-trigger" data-script="pill_x86"><i class="fas fa-microchip"></i> x86</span>
+                        <span class="pill script-trigger" data-script="pill_riscv" style="border-color:rgba(109,142,255,0.25); color:var(--accent);"><i class="fas fa-microchip"></i> RISC‑V</span>
+                    </div>
+                    <p style="margin-top:1.5rem; font-size:0.9rem; color:var(--text-muted); text-align:center;">
+                        <i class="fas fa-info-circle" style="color:var(--accent); margin-right:0.4rem;"></i>
+                        Click the chips above for more details from the script.
+                    </p>
+                </div>
+            </div>
+
+        </div><!-- /slides-wrapper -->
+
+        <!-- Navigation -->
+        <div class="nav-controls">
+            <button id="prevBtn" aria-label="Previous slide">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="dots" id="dotsContainer"></div>
+            <span class="slide-counter" id="slideCounter">1 / 16</span>
+            <button id="nextBtn" aria-label="Next slide">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="keyboard-hint">
+            <i class="fas fa-arrow-left"></i> &nbsp; <i class="fas fa-arrow-right"></i> &nbsp; navigate
+        </div>
+
+    </div><!-- /presentation -->
+
+    <!-- ===== SCRIPT MODAL ===== -->
+    <div class="script-modal-overlay" id="scriptModal">
+        <div class="script-modal">
+            <button class="modal-close" id="modalCloseBtn" aria-label="Close details">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-title" id="modalTitle">Details</div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO client -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ── Slide Navigation ──
+            const slides = document.querySelectorAll('.slide');
+            const dotsContainer = document.getElementById('dotsContainer');
+            const counter = document.getElementById('slideCounter');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+
+            // Build dots
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('data-index', i);
+                dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                dotsContainer.appendChild(dot);
+            }
+
+            const dots = dotsContainer.querySelectorAll('.dot');
+
+            function updateSlide(index) {
+                if (index < 0) index = 0;
+                if (index >= totalSlides) index = totalSlides - 1;
+                currentIndex = index;
+
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === currentIndex);
+                });
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+
+                counter.textContent = (currentIndex + 1) + ' / ' + totalSlides;
+
+                // Emit slide change to server for mobile
+                socket.emit('slide-change', currentIndex);
+            }
+
+            function goTo(index) { updateSlide(index); }
+
+            function nextSlide() { goTo(currentIndex + 1); }
+
+            function prevSlide() { goTo(currentIndex - 1); }
+
+            // Expose globally for socket events
+            window.nextSlide = nextSlide;
+            window.prevSlide = prevSlide;
+
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-index'), 10);
+                    goTo(idx);
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                    e.preventDefault();
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    prevSlide();
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    goTo(0);
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    goTo(totalSlides - 1);
+                } else if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+            const presentation = document.querySelector('.presentation');
+
+            presentation.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            presentation.addEventListener('touchend', (e) => {
+                const dx = e.changedTouches[0].screenX - touchStartX;
+                const dy = e.changedTouches[0].screenY - touchStartY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+                    if (dx < 0) nextSlide();
+                    else prevSlide();
+                }
+            }, { passive: true });
+
+            // ── Script Data (full from original) ──
+            const scriptData = {
+                'title': 'Hello world! In today\'s video, we are going to look at the differences between the CISC and RISC processors. Rather than directly pointing out the differences between these two architectures, we\'ll look at a series of factors that led to the evolution of computer architecture in general.',
+                'risc_intro': 'RISC stands for <span class="hl-risc">Reduced Instruction Set Computer</span>. It uses a small, highly optimized set of instructions that execute in a single clock cycle.',
+                'cisc_intro': 'CISC stands for <span class="hl-cisc">Complex Instruction Set Computer</span>. It is designed to execute complex operations with a single instruction, minimizing the number of instructions per program.',
+                'performance': 'The performance equation is: <strong>Execution Time = Instruction Count × CPI × Clock Cycle Time</strong>. CISC focuses on lowering Instruction Count, while RISC focuses on lowering CPI.',
+                'efficiency': 'Efficiency in RISC comes from simpler hardware and pipelining. Efficiency in CISC comes from dense code and fewer memory accesses.',
+                'processor_intro': 'Before we approach this topic in depth, let\'s understand what exactly is a processor. A processor is basically nothing but the brain or the computing part of the computer. It takes instructions and data as inputs. The instructions tell the processor what it is supposed to do with the data—this is nothing but manipulation of the data.',
+                'processor_brain': 'A processor is the brain or the computing part of the computer. It takes instructions and data as inputs and performs data manipulation based on those instructions.',
+                'cisc_definition': 'CISC, or <span class="hl-cisc">Complex Instruction Set Computer</span>, is a processor architecture where a single instruction can execute multiple low-level operations (like memory access, arithmetic, and storage) in one go. This was designed to bridge the gap between high-level languages and machine code, making compilers simpler to design.',
+                'risc_definition': 'RISC, or <span class="hl-risc">Reduced Instruction Set Computer</span>, is a processor architecture that uses a highly streamlined set of instructions. Each instruction is simple, typically executes in a single clock cycle, and operates exclusively on registers, with only LOAD and STORE instructions accessing memory.',
+                'core_role': 'Computer architecture can be classified into two types based on the instruction sets: first is CISC, which stands for Complex Instruction Set Computer, and another is RISC, which stands for Reduced Instruction Set Computer.',
+                'brain_system': 'The processor is the brain of the system. It receives inputs consisting of instructions and raw data to perform data manipulation. The instructions tell the processor what it is supposed to do with the data.',
+                'isa': 'Each processor has an instruction set. This is nothing but a collection of instructions or operations that can be performed by the processor. The Instruction Set Architecture (ISA) forms the interface between software and silicon.',
+                'arch_classifications': 'ISA design splits computer architectures into two primary schools of thought: <span class="hl-cisc">CISC (Complex Instruction Set Computer)</span> and <span class="hl-risc">RISC (Reduced Instruction Set Computer)</span>.',
+                'pre1970': 'Before 1970, the memory or RAM was slow and expensive, and the programs were often written in high-level languages as they were more user-friendly. It was the job of the compiler to convert these HLL instructions into lower-level counterparts for execution by a processor.',
+                'slow_ram': 'Before 1970, memory or RAM was slow and expensive. Programs needed to take up minimal space, so compact instructions were essential.',
+                'compiler_challenges': 'With the increase in the complexity of high-level languages, designing a compiler became a tricky, error-prone, and tedious task. Translating complex HLL constructs into low-level machine code was difficult.',
+                'bridge_gap': 'To make compiler design easier, there was a need to bridge the gap between high-level languages and computer architecture. Hardware architects created compact, powerful instructions that did more with less code.',
+                'compact_instr_title': 'It made absolute sense to have compact, low-level instructions. These instructions not only occupied less space in memory, but they also simplified the task of designing a compiler.',
+                'mult_explanation': 'Simply by typing this one command, MULT [A], [B], multiple things are taken care of. Firstly, the numbers from the specified memory locations are fetched, then they are loaded implicitly into two separate registers, and then multiplication is performed. Finally, the result is stored in the appropriate memory location. It is clearly evident that compact instructions allow you to get more done with less. <br><div class="diagram-svg"><svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="80" height="40" fill="#1a2332" stroke="#ff6b6b" stroke-width="2" rx="6"/><text x="30" y="35" fill="#bcc9ff" font-size="12">Memory</text><line x1="90" y1="30" x2="130" y2="30" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4,4"/><rect x="130" y="10" width="80" height="40" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="6"/><text x="145" y="35" fill="#bcc9ff" font-size="12">Registers</text><line x1="210" y1="30" x2="250" y2="30" stroke="#6d8eff" stroke-width="2" stroke-dasharray="4,4"/><rect x="250" y="10" width="80" height="40" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="6"/><text x="265" y="35" fill="#bcc9ff" font-size="12">ALU</text><line x1="330" y1="30" x2="370" y2="30" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4,4"/><rect x="370" y="10" width="80" height="40" fill="#1a2332" stroke="#ff6b6b" stroke-width="2" rx="6"/><text x="390" y="35" fill="#bcc9ff" font-size="12">Memory</text></svg></div>',
+                'software_savings': 'Compact instructions drastically reduced binary file size during an era when every byte of RAM was costly. This was a critical advantage when memory was extremely constrained.',
+                'compiler_simplify': 'By delegating multi-step execution logic directly to silicon hardware, compilers required significantly less complexity. The hardware took on the burden so that software could be simpler.',
+                'silicon_burden': 'However, to support such instructions, the silicon or the hardware underneath had to take the burden of execution, which made it complex. The idea here was to move all the complexity to the hardware and make the software less demanding.',
+                'hardware_burden': 'Shifting complexity into hardware required supporting hundreds of specialized silicon instructions. As the processor started supporting more and more diverse instructions, the processor designs started getting more and more complicated.',
+                'physical_drawbacks': 'More silicon was getting utilized to support these instructions, which resulted in large and expensive processors. High level of complexity also resulted in increased power consumption and heat dissipation.',
+                'retroactive_term': 'Please note that the computer architects didn\'t explicitly set out to create Complex Instruction Set Computers; instead, they naturally evolved due to the conditions existing at that time. Interestingly, the term CISC was coined quite later when the idea of RISC or Reduced Instruction Set Computers came into the picture.',
+                'risc_revolution': 'Now, let\'s move into the early 1980s. It was discovered that 20 percent of the instructions were used 80 percent of the time in any given program, which means many complex instructions of CISC architecture were not being used. This realization led to a rethinking of the processor design.',
+                'eighty_twenty_title': 'In the early 1980s, it was discovered that <span class="hl-risc">20 percent of the instructions were used 80 percent of the time</span> in any given program. This meant many complex CISC instructions were rarely used, taking up valuable silicon real estate for minimal gain.',
+                'eighty_twenty_rule': 'In the early 1980s, empirical studies revealed that <strong>80% of a program\'s execution used only 20% of the instruction set</strong>. Most complex CISC instructions were rarely used, taking up valuable silicon real estate for minimal gain. This discovery was a turning point in processor design.',
+                'risc_philosophy': 'This realization led to a rethinking of the processor design. It made more sense to have an instruction set consisting of simple and only the most commonly used instructions. That\'s how <span class="hl-risc">RISC (Reduced Instruction Set Computer)</span> architecture was conceptualized. Engineers stripped away complex operations, designing processors around a small set of simple, fast, heavily-used instructions.',
+                'code_comparison_title': 'CISC-based computers have many instructions, and by many, I mean they can typically occupy almost 1,200 pages. However, RISC-based computers have a reduced number of instructions, usually less than 100.',
+                'cisc_code_example': 'In CISC, one instruction like MULT [A], [B] does everything: fetches from memory, loads into registers, multiplies, and stores back. This gives high instruction density but complex hardware. The same task which a CISC completed in one instruction takes more than one instruction in RISC.',
+                'risc_code_example': 'In RISC, you must load and store operands explicitly using LOAD and STORE commands. LOAD gets data from memory into a register, PROD multiplies register values, and STORE moves the result back to memory. Although the instructions are simple in format, you need more instructions to get the desired result — but each executes in a single cycle.',
+                'pipelining_title': 'RISC-based instructions are simpler and generally of the same length, thus they need only a few short clock cycles for completion, which results in faster execution speeds. As each instruction takes more or less the same time for execution, it is also possible to implement pipelining.',
+                'pipeline_diagram_explanation': 'This diagram shows a 5-stage pipeline with 5 instructions in flight. <strong>IF</strong> = Instruction Fetch, <strong>ID</strong> = Instruction Decode, <strong>IE</strong> = Execute, <strong>RW</strong> = Write-back. At t1, only Instruction 1 is being fetched. By t4, all 4 stages are engaged with different instructions. This overlap maximizes throughput — while one instruction is executing, the next is being decoded, and the third is being fetched. The bottom row shows the number of stages engaged at each clock cycle, illustrating how the pipeline fills up and then drains. This is why RISC can achieve near 1 CPI (Cycle Per Instruction) — the pipeline keeps the hardware busy every cycle.',
+                'pipeline_one_cycle': 'Simple RISC operations complete in single cycles, enabling high clock frequencies and rapid throughput. This is a key advantage over CISC\'s multi-cycle instructions.',
+                'pipeline_uniform': 'RISC instructions share fixed lengths (typically 32 bits), allowing the processor hardware to decode instructions almost instantly. This simplifies the control logic and enables faster execution.',
+                'pipeline_parallel': 'In pipelining, when one instruction is being executed, the next instruction is being decoded, and the third one is being fetched — all in one clock cycle. This assembly-line approach maximizes instruction rate and improves overall processor performance.',
+                'transistors_title': 'CISC needed a large number of transistors to support complex instructions, but with reduced instructions of RISC, the hardware was simpler to implement. These saved transistors were then used to increase the number of registers, cache, and other units like math coprocessors.',
+                'more_registers': 'With an increase in the number of general-purpose registers, there is no need for the processor to access the main memory frequently. Variables that are used frequently are kept in the registers for fast access. Most RISC instructions work on registers only.',
+                'onchip_cache': 'Saved transistors were used to build dedicated L1/L2 caches on the chip itself, eliminating external RAM bottlenecks and dramatically improving performance.',
+                'math_coprocessors': 'Dedicated Floating Point Units (FPUs) were added to accelerate complex floating-point mathematics. This offloaded intensive calculations from the main CPU core.',
+                'perf_eq_title': 'Let\'s have a look at the performance equation: Execution Time = Instruction Count × CPI × Clock Cycle Time. This equation clearly indicates the major point of difference between CISC and RISC architecture.',
+                'perf_eq_detailed': 'The performance equation: <strong>Execution Time = Instruction Count × CPI × Clock Cycle Time</strong>. This equation clearly indicates the major point of difference between CISC and RISC architecture. The emphasis in the case of CISC is on keeping the instruction count low for a program, which increases the overall complexity of an instruction and results in a higher CPI. And in the case of RISC, the emphasis is on minimizing the CPI, usually to a single clock cycle, which makes the instructions simple but increases their overall count in a program.',
+                'cisc_perf_strategy': 'CISC focuses on minimizing the <strong>Instruction Count</strong>. By having complex, powerful instructions, a program needs fewer total instructions. However, this complexity leads to a higher <strong>CPI (Cycles Per Instruction)</strong>, typically 2 to 10+ cycles per instruction.',
+                'risc_perf_strategy': 'RISC focuses on minimizing the <strong>CPI</strong> and <strong>Clock Cycle Time</strong>. By keeping instructions simple and fixed-length, they execute in a single clock cycle. However, this simplicity means a program needs more total instructions to accomplish the same task.',
+                'comparison_table_title': 'CISC-based computers have many instructions, and by many, I mean they can typically occupy almost 1,200 pages. However, RISC-based computers have a reduced number of instructions, usually less than 100.',
+                'comparison_table': 'The table compares CISC and RISC across key metrics: Instruction Set Size (CISC: 300-1200+, RISC: <100), CPI (CISC: variable 2-10+, RISC: constant ~1), Memory Access Mode (CISC: direct memory operations, RISC: Load/Store only), Hardware Emphasis (CISC: complex microcode, RISC: smart compilers), and Primary Advantages (CISC: compact code & backward compatibility, RISC: high speed, low power, pipelining).',
+                'industry_title': 'Here are some examples of CISC processors: Motorola 68k, and x86 from Intel and AMD. CISC processors dominate in the PC and data center servers market. Here are some examples of RISC architecture: Sun\'s SPARC, MIPS architecture, and ARM processors used by Apple and Qualcomm. These are used in tablets and smartphones.',
+                'cisc_dominance': 'CISC processors like Intel x86 and AMD64 dominate the PC, laptop, and data center server markets due to their vast software ecosystems and backward compatibility. x86 from Intel and AMD are the prime examples.',
+                'risc_dominance': 'RISC processors like ARM dominate the mobile, tablet, and embedded systems markets due to their power efficiency and simple hardware design. Apple\'s M-series chips and Qualcomm\'s Snapdragon are prime examples. RISC dominates in the mobile devices market and embedded systems.',
+                'real_examples_title': 'Now, let\'s look at specific real-world processors that represent each architecture. Understanding these examples helps solidify the theoretical differences.',
+                'cisc_example_detail': 'The <span class="hl-cisc">Intel Core i9</span> (x86) is a prime example of CISC. It supports a massive instruction set (over 1000 instructions) with variable-length encoding (1 to 15 bytes). This allows for very dense code, but the hardware is complex, requiring microcode to decode and execute instructions across multiple cycles. It achieves high clock speeds (5+ GHz) but consumes significant power. Used in gaming PCs, workstations, and servers. <br><div class="diagram-svg"><svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="80" height="60" fill="#1a2332" stroke="#ff6b6b" stroke-width="2" rx="8"/><text x="25" y="45" fill="#bcc9ff" font-size="12">CISC</text><rect x="120" y="10" width="80" height="60" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="8"/><text x="135" y="45" fill="#bcc9ff" font-size="12">Microcode</text><rect x="230" y="10" width="80" height="60" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="8"/><text x="245" y="45" fill="#bcc9ff" font-size="12">ALU</text><rect x="340" y="10" width="80" height="60" fill="#1a2332" stroke="#ff6b6b" stroke-width="2" rx="8"/><text x="355" y="45" fill="#bcc9ff" font-size="12">Memory</text></svg></div>',
+                'risc_example_detail': 'The <span class="hl-risc">Apple M3</span> (ARM) is a leading RISC processor. It uses a small, fixed-length (32-bit) instruction set with a load/store architecture. All operations are register-to-register, and only LOAD/STORE access memory. This simplicity allows for deep pipelining and high performance per watt. It features a large register file (32+ registers) and efficient caches. Used in MacBooks, iPads, and iPhones, delivering excellent battery life. <br><div class="diagram-svg"><svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="80" height="60" fill="#1a2332" stroke="#4ecdc4" stroke-width="2" rx="8"/><text x="25" y="45" fill="#bcc9ff" font-size="12">RISC</text><rect x="120" y="10" width="80" height="60" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="8"/><text x="135" y="45" fill="#bcc9ff" font-size="12">Registers</text><rect x="230" y="10" width="80" height="60" fill="#1a2332" stroke="#6d8eff" stroke-width="2" rx="8"/><text x="245" y="45" fill="#bcc9ff" font-size="12">ALU</text><rect x="340" y="10" width="80" height="60" fill="#1a2332" stroke="#4ecdc4" stroke-width="2" rx="8"/><text x="355" y="45" fill="#bcc9ff" font-size="12">Cache</text></svg></div>',
+                'pill_arm': 'ARM processors are a prime example of <span class="hl-risc">RISC</span> architecture. They are used extensively by Apple (M-series chips), Qualcomm (Snapdragon), and in most Android smartphones. Their power efficiency makes them ideal for mobile and embedded systems.',
+                'pill_x86': 'x86 processors from Intel and AMD are classic examples of <span class="hl-cisc">CISC</span> architecture. They have a rich, complex instruction set and dominate the desktop, laptop, and server markets.',
+                'pill_riscv': 'RISC-V is an open standard instruction set architecture (ISA) based on established RISC principles. It is gaining significant traction in both embedded systems and high-performance computing as a free and flexible alternative.'
+            };
+
+            // ── Slide → Script key mapping ──
+            const slideScriptMap = {
+                0: 'title',
+                1: 'processor_intro',
+                2: 'core_role',
+                3: 'pre1970',
+                4: 'compact_instr_title',
+                5: 'silicon_burden',
+                6: 'risc_revolution',
+                7: 'eighty_twenty_title',
+                8: 'code_comparison_title',
+                9: 'pipelining_title',
+                10: 'transistors_title',
+                11: 'perf_eq_title',
+                12: 'comparison_table_title',
+                13: 'industry_title',
+                14: 'real_examples_title',
+                15: 'pill_arm'
+            };
+
+            // ── Click on slide content to show its script ──
+            document.querySelectorAll('.slide-content').forEach((content, idx) => {
+                content.addEventListener('click', function(e) {
+                    // Ignore if click is on a script-trigger element (they handle their own)
+                    if (e.target.closest('.script-trigger')) return;
+                    const key = slideScriptMap[idx];
+                    if (key && scriptData[key]) {
+                        openModal(key);
+                    }
+                });
+            });
+
+            // ── Modal Logic ──
+            const modal = document.getElementById('scriptModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const closeBtn = document.getElementById('modalCloseBtn');
+
+            const titleMap = {
+                'title': 'Introduction',
+                'risc_intro': 'RISC Overview',
+                'cisc_intro': 'CISC Overview',
+                'performance': 'Performance Focus',
+                'efficiency': 'Efficiency Focus',
+                'processor_intro': 'What is a Processor?',
+                'processor_brain': 'The Brain of the System',
+                'cisc_definition': 'What is CISC?',
+                'risc_definition': 'What is RISC?',
+                'core_role': 'Core Role of a Processor',
+                'brain_system': 'Brain of the System',
+                'isa': 'Instruction Set Architecture',
+                'arch_classifications': 'Architectural Classifications',
+                'pre1970': 'Pre-1970 Memory Constraints',
+                'slow_ram': 'Slow & Expensive RAM',
+                'compiler_challenges': 'Compiler Challenges',
+                'bridge_gap': 'Bridging the Gap',
+                'compact_instr_title': 'The Era of Compact Instructions',
+                'mult_explanation': 'MULT Instruction Breakdown',
+                'software_savings': 'Software & Memory Savings',
+                'compiler_simplify': 'Compiler Simplification',
+                'silicon_burden': 'Silicon Burden & Natural CISC',
+                'hardware_burden': 'Hardware Burden',
+                'physical_drawbacks': 'Physical Drawbacks',
+                'retroactive_term': 'Retroactive Terminology',
+                'risc_revolution': 'The RISC Revolution',
+                'eighty_twenty_title': 'The 80/20 Discovery',
+                'eighty_twenty_rule': 'The 80/20 Rule',
+                'risc_philosophy': 'The RISC Philosophy',
+                'code_comparison_title': 'Code Execution Comparison',
+                'cisc_code_example': 'CISC Execution',
+                'risc_code_example': 'RISC Execution',
+                'pipelining_title': 'Pipelining & Execution Speed',
+                'pipeline_diagram_explanation': 'Pipeline Diagram Explained',
+                'pipeline_one_cycle': '1 Clock Cycle',
+                'pipeline_uniform': 'Uniform Length',
+                'pipeline_parallel': 'Pipelining',
+                'transistors_title': 'Reallocating Saved Transistors',
+                'more_registers': 'More Registers',
+                'onchip_cache': 'On-Chip Caches',
+                'math_coprocessors': 'Math Coprocessors',
+                'perf_eq_title': 'The Performance Equation',
+                'perf_eq_detailed': 'Performance Equation Deep Dive',
+                'cisc_perf_strategy': 'CISC Optimization Strategy',
+                'risc_perf_strategy': 'RISC Optimization Strategy',
+                'comparison_table_title': 'Architectural Comparison Table',
+                'comparison_table': 'Comparison Table Details',
+                'industry_title': 'Real-World Industry Dominance',
+                'cisc_dominance': 'CISC: Intel x86 & AMD',
+                'risc_dominance': 'RISC: ARM & Apple Silicon',
+                'real_examples_title': 'Real-World Examples',
+                'cisc_example_detail': 'CISC Example: Intel Core i9',
+                'risc_example_detail': 'RISC Example: Apple M3',
+                'pill_arm': 'ARM (RISC)',
+                'pill_x86': 'x86 (CISC)',
+                'pill_riscv': 'RISC-V'
+            };
+
+            function openModal(key) {
+                if (!key || !scriptData[key]) return;
+                modalTitle.textContent = titleMap[key] || 'Details';
+                modalBody.innerHTML = `<div>${scriptData[key]}</div>`;
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+
+            // Attach click listeners to script-trigger elements
+            document.querySelectorAll('.script-trigger').forEach(el => {
+                const key = el.getAttribute('data-script');
+                if (!key) return;
+                if (!el.classList.contains('card') && !el.classList.contains('pill') &&
+                    !el.classList.contains('col') && !el.classList.contains('table-wrap') &&
+                    !el.classList.contains('equation') && !el.classList.contains('code-block') &&
+                    !el.classList.contains('pipeline-diagram')) {
+                    const dot = document.createElement('span');
+                    dot.className = 'info-dot';
+                    el.appendChild(dot);
+                }
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openModal(key);
+                });
+            });
+
+            // Table rows click
+            document.querySelectorAll('.table-wrap td, .table-wrap th').forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', function(e) {
+                    const parent = this.closest('.table-wrap');
+                    if (parent) {
+                        const key = parent.getAttribute('data-script');
+                        if (key) openModal(key);
+                    }
+                });
+            });
+
+            // ── Socket.IO Integration ──
+            const socket = io();
+
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                // Send current slide index on connect
+                socket.emit('slide-change', currentIndex);
+            });
+
+            // Listen for remote navigation commands (from mobile)
+            socket.on('screen-update', (data) => {
+                if (data.action === 'slide-next') {
+                    window.nextSlide();
+                } else if (data.action === 'slide-prev') {
+                    window.prevSlide();
+                } else if (data.action === 'theme-change') {
+                    // Apply theme
+                    document.body.setAttribute('data-theme', data.theme);
+                }
+            });
+
+            // Respond to script request from mobile
+            socket.on('request-script', () => {
+                const key = slideScriptMap[currentIndex];
+                if (key && scriptData[key]) {
+                    socket.emit('script-content', scriptData[key]);
+                } else {
+                    socket.emit('script-content', 'No script available for this slide.');
+                }
+            });
+
+            // Send total slides on request
+            socket.on('request-total-slides', () => {
+                socket.emit('total-slides', totalSlides);
+            });
+
+            // ── Init ──
+            updateSlide(0);
+
+            // Also emit total slides on connect
+            setTimeout(() => {
+                socket.emit('total-slides', totalSlides);
+            }, 100);
+
+        })();
+    </script>
+
+</body>
+</html>
